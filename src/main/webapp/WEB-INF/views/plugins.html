@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>richText</title>
+    <!--引入js-->
+    <script src="../../static/js/jquery-2.0.3.js"></script>
+    <script src="../../static/js/bootstrap.min.js"></script>
+    <script src="../../static/js/richText.js"></script>
+    <style>
+        .rich-text {
+            width: 500px;
+            height: 500px;
+            border: 1px solid #cccccc;
+        }
+    </style>
+</head>
+<body>
+<button onclick="add()">add</button>
+<button onclick="get()">getHtml</button>
+<div class="rich-text" contenteditable="true">
+
+</div>
+<button class="edit">edit</button>
+<script>
+    function add() {
+        //document.execCommand("insertHTML", null, "<div>&zwj;<div>33333</div></div>");
+        var reg=/<\/div>.<b id="test"><\/b>/g;
+        console.log(reg.test('</div>&nbsp;<b id="test"></b>'));
+
+        //var insertHtml = '<div>dsf</div>';
+        // document.execCommand("insertHTML", null, insertHtml);
+    }
+    function get() {
+        var reg=/&nbsp;/g;
+        var zwReg=/&zwj;/g;
+        var spaceReg=/ /g;
+        var dis='<div style="background-color: #8c8c8c">&zwj;</div><div>a</div>';
+        var flag='<b id="test"></b>';
+        var nowarpFlag=flag.replace(spaceReg,"");
+        document.execCommand("insertHTML", null, flag);
+        var parentDiv=$("#test").parents(".rich-text")[0];
+        var mes=$(parentDiv).html();
+       // console.log($(parentDiv).html());
+      //<b id="test"></b> startwith ok
+        //232<div><b id="test"></b><br></div>
+        //232<div>323</div><b id="test"></b>
+        //<div><b id="test"></b><br></div>  oK
+        //mes=mes.replace(reg,"");
+        //mes=mes.replace(zwReg,"");
+        //mes=mes.replace(spaceReg,"");
+        var startWithOk='<b id="test"></b>';
+        var containOk='<div><b id="test"></b><br></div>';
+        var zwjContainOk=/.*<\/div><b id="test"><\/b>/g;
+        console.log("mes","["+mes+"]");
+        console.log("nowarpFlag","["+nowarpFlag+"]");
+        document.execCommand('undo',null);
+       var rs= zwjContainOk.test(mes);
+       alert(rs);
+        if (mes.indexOf(startWithOk)==0||mes.indexOf(containOk)>0||rs){
+            document.execCommand("insertHTML", null, dis);
+        }else{
+            document.execCommand("insertHTML", null, "<br>"+dis);
+        }
+        //selectAllText($(".rich-text")[0]);
+    }
+
+    /*自定义右键*/
+    setContextMenu();
+    function setContextMenu() {
+
+        var edit = document.querySelector('.edit');
+
+        edit.oncontextmenu = function (e) {
+
+            e = e || window.event;
+
+            e.preventDefault();
+
+            var top = e.pageY || e.clientY + document.body.scrollTop + document.docuemntElement.scrollTop;
+            top -= this.scrollTop;
+
+            var left = e.pageX || e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
+
+            left -= this.scrollLeft;
+
+            var menu = '<div class="contextmenu" style="background:#fff;color:#333;padding:10px;position:fixed;top:' + top + 'px;left:' + left + 'px">';
+
+            menu += '<a>右键菜单</a>';
+
+            menu += '</div>';
+
+            var box = document.createElement('div');
+
+            box.innerHTML = menu;
+
+            var menuBox = document.querySelector('.contextmenu');
+
+            if (menuBox) {
+
+                menuBox.style.top = top + 'px';
+
+                menuBox.style.left = left + 'px';
+
+            } else {
+
+                document.body.appendChild(box.firstChild);
+
+            }
+            ;
+
+        };
+
+        /*失去焦点时关闭右键菜单*/
+
+        window.addEventListener('click', function (e) {
+
+            e = e || window.event;
+
+            var menuBox = document.querySelector('.contextmenu');
+
+            if (menuBox) {
+
+                var target = e.target;
+
+                var parent = target.parentNode;
+
+                if (parent.nodeName != 'DIV' || !parent.classList.contains('contextmenu')) {
+
+                    document.body.removeChild(menuBox);
+
+                }
+
+            }
+
+        });
+    }
+
+
+    function selectAllText(elem){
+
+        if(window.getSelection){
+
+            elem.focus();
+
+            var range = window.getSelection();
+
+            range.selectAllChildren(elem);
+
+            range.collapseToEnd();
+
+        }else if(document.selection){
+
+            var range = document.selection.createTextRange();
+
+            range.moveToElementText(elem);
+
+            range.collapse(false);
+
+            range.select(); /*避免产生空格*/
+
+        }
+
+    }
+</script>
+</body>
+</html>

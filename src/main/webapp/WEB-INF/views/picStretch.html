@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>border</title>
+    <script src="../../static/js/jquery-2.0.3.js"></script>
+    <style>
+        .stretch-photo-container .left-bottom-focus {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-bottom: 1px solid #cccccc;
+            border-left: 1px solid #cccccc;
+            position: absolute;
+            left: -6px;
+            bottom: -6px;
+        }
+
+        .stretch-photo-container .left-top-focus {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-top: 1px solid #cccccc;
+            border-left: 1px solid #cccccc;
+            position: absolute;
+            left: -6px;
+            top: -6px;
+        }
+
+        .stretch-photo-container .left-bottom-focus {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-bottom: 1px solid #cccccc;
+            border-left: 1px solid #cccccc;
+            position: absolute;
+            left: -6px;
+            bottom: -6px;
+        }
+
+        .stretch-photo-container .right-top-focus {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-top: 1px solid #cccccc;
+            border-right: 1px solid #cccccc;
+            position: absolute;
+            right: -6px;
+            top: -6px;
+        }
+        .stretch-photo-container .right-bottom-focus{
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            background-color: #8c8c8c;
+            position: absolute;
+            right: -6px;
+            bottom: -6px;
+            cursor: move;
+        }
+        .stretch-photo-container .focus-cell{
+            display: none;
+        }
+        .stretch-photo-container{
+            display: inline-block;
+            position: relative;
+        }
+    </style>
+</head>
+<body>
+<div  class="stretch-photo-container">
+    <img src="../../static/img/demo.png">
+    <div class="left-bottom-focus focus-cell"></div>
+    <div class="left-top-focus focus-cell"></div>
+    <div class="right-top-focus focus-cell"></div>
+    <div class="right-bottom-focus focus-cell"></div>
+</div>
+<div class="stretch-photo-container">
+    <img src="../../static/img/demo.png">
+    <div class="left-bottom-focus focus-cell"></div>
+    <div class="left-top-focus focus-cell"></div>
+    <div class="right-top-focus focus-cell"></div>
+    <div class="right-bottom-focus focus-cell"></div>
+</div>
+<script>
+    $(window).click(function (e) {
+        var tarEle=e.target;
+        var isStretchPic=false;
+        $(".stretch-photo-container").removeClass("active");
+        if ($(tarEle).hasClass("stretch-photo-container")||$($(tarEle).parent()[0]).hasClass("stretch-photo-container")){
+            isStretchPic=true;
+            $($(tarEle).parent()).addClass("active");
+            $($(tarEle)).addClass("active");
+        }
+        $(".stretch-photo-container .focus-cell").css({"display":"none"});
+        if (isStretchPic) {
+            $(".stretch-photo-container.active .focus-cell").css({"display": "inline-block"});
+        }
+    });
+    var active_StretchPic_orginalX=0;
+    var active_StretchPic_orginalY=0;
+    var active_StretchPic_wid=0;
+    var active_StretchPic_hei=0;
+    var active_StretchPic_isEnter=false;
+    $(".right-bottom-focus").mousedown(function (e) {
+        active_StretchPic_isEnter=true;
+        active_StretchPic_orginalX=e.clientX;
+        active_StretchPic_orginalY=e.clientY;
+        active_StretchPic_wid=$(".stretch-photo-container.active").width();
+        active_StretchPic_hei=$(".stretch-photo-container.active").height();
+    });
+    $(window).mousemove(function (e) {
+        if (!active_StretchPic_isEnter){
+            return ;
+        }
+        var diffY=e.clientY-active_StretchPic_orginalY;
+        var diffX=e.clientX-active_StretchPic_orginalX;
+        $(".stretch-photo-container.active").width(active_StretchPic_wid+diffX);
+        $(".stretch-photo-container.active img").width(active_StretchPic_wid+diffX);
+        if ($(".stretch-photo-container.active").width()<40){
+            $(".stretch-photo-container.active").width(40);
+            $(".stretch-photo-container.active img").width(40);
+        }
+        $(".stretch-photo-container.active").height(active_StretchPic_hei+diffY);
+        $(".stretch-photo-container.active img").height(active_StretchPic_hei+diffY);
+        if ($(".stretch-photo-container.active").height()<40){
+            $(".stretch-photo-container.active").height(40);
+            $(".stretch-photo-container.active img").height(40);
+        }
+    });
+    $(window).mouseup(function () {
+        active_StretchPic_isEnter=false;
+    });
+    var contains  = function(root, el) {
+        if (root.compareDocumentPosition)
+            return root === el || !!(root.compareDocumentPosition(el) & 16);
+        if (root.contains && el.nodeType === 1){
+            return root.contains(el) && root !== el;
+        }
+        while ((el = el.parentNode))
+            if (el === root) return true;
+        return false;
+    }
+</script>
+</body>
+</html>

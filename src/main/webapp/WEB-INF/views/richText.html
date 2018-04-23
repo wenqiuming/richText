@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>richText</title>
+    <link rel="stylesheet" href="../../static/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../static/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../../static/css/richText.css">
+    <link rel="stylesheet" href="../../static/css/tomorrow-night.min.css">
+</head>
+<body>
+
+<div class="padding-all-5 bg-light-gray rich-text-panel">
+
+    <!--标题-->
+    <div class="btn-group">
+        <div class="btn-group">
+            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" title="标题"
+                    tooltip="true">
+                <i class="fa fa-header" aria-hidden="true"></i> <span class="caret"></span></button>
+            <ul class="dropdown-menu h-container" role="menu">
+                <li><a href="javascript:void (0)" class="h h1" onclick="headerStyle('h1')">H1</a></li>
+                <li><a href="javascript:void (0)" class="h h2" onclick="headerStyle('h2')">H2</a></li>
+                <li><a href="javascript:void (0)" class="h h3" onclick="headerStyle('h3')">H3</a></li>
+                <li><a href="javascript:void (0)" class="h h4" onclick="headerStyle('h4')">H4</a></li>
+                <li><a href="javascript:void (0)" class="h" onclick="headerStyle('div')">正文</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="btn-group">
+        <!--font size-->
+        <div class="btn-group">
+            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" title="字号"
+                    tooltip="true">
+                <b id="show_font_size">2</b>&nbsp; <span class="caret"></span></button>
+            <ul class="dropdown-menu  select-number" role="menu">
+                <li class="font-pick"><a href="javascript:fontSizeStyle(1)">1</a></li>
+                <li class="font-pick"><a href="javascript:fontSizeStyle(2)">2</a></li>
+                <li class="font-pick"><a href="javascript:fontSizeStyle(3)">3</a></li>
+                <li class="font-pick"><a href="javascript:fontSizeStyle(4)">4</a></li>
+                <li class="font-pick"><a href="javascript:fontSizeStyle(5)">5</a></li>
+                <li class="font-pick"><a href="javascript:fontSizeStyle(6)">6</a></li>
+                <li class="font-pick"><a href="javascript:fontSizeStyle(7)">7</a></li>
+            </ul>
+        </div>
+        <!--font color-->
+        <div class="btn-group">
+            <button type="button" class="btn btn-default dropdown-toggle btn-font-color" data-toggle="dropdown"
+                    title="颜色" tooltip="true">
+                <i class="fa fa-font" aria-hidden="true"></i> &nbsp;<span class="caret"></span>
+                <div id="color-line"></div>
+            </button>
+            <div id="fore-color" class="dropdown-menu color-panel" role="menu">
+                <a href="javascript:fontColorStyle('#333333')">
+                    <div class="color-cell" color="#333333"></div>
+                </a>
+                <a href="javascript:fontColorStyle('#CFEE91')">
+                    <div class="color-cell" color="#CFEE91"></div>
+                </a>
+                <a href="javascript:fontColorStyle('#657DC4')">
+                    <div class="color-cell" color="#657DC4"></div>
+                </a>
+                <a href="javascript:fontColorStyle('#66BFBF')">
+                    <div class="color-cell" color="#66BFBF"></div>
+                </a>
+                <a href="javascript:fontColorStyle('#FFCE00')">
+                    <div class="color-cell" color="#FFCE00"></div>
+                </a>
+                <a href="javascript:fontColorStyle('#FCFEFE')">
+                    <div class="color-cell" color="#FCFEFE"></div>
+                </a>
+                <br>
+                <a href="javascript:fontColorStyle('#FFDE25')">
+                    <div class="color-cell" color="#FFDE25"></div>
+                </a>
+                <a href="javascript:fontColorStyle('#F76B8A')">
+                    <div class="color-cell" color="#F76B8A"></div>
+                </a>
+                <a href="javascript:fontColorStyle('#1989AC')">
+                    <div class="color-cell" color="#1989AC"></div>
+                </a>
+                <a href="javascript:fontColorStyle('#155263')">
+                    <div class="color-cell" color="#155263"></div>
+                </a>
+                <a href="javascript:fontColorStyle('#FF6F3C')">
+                    <div class="color-cell" color="#FF6F3C"></div>
+                </a>
+                <a href="javascript:fontColorStyle('#088C6F')">
+                    <div class="color-cell" color="#088C6F"></div>
+                </a>
+                <br>
+            </div>
+        </div>
+        <div class="btn-group">
+            <button type="button" class="btn btn-default dropdown-toggle btn-font-bg" data-toggle="dropdown" title="背景色" tooltip="true">
+                <i class="fa fa-font font-bg" aria-hidden="true"></i>
+                <span class="caret"></span>
+            </button>
+            <div id="bg-color" class="dropdown-menu color-panel" role="menu">
+                <a href="javascript:fontBgColorStyle('#FFFFFF')">
+                    <div class="color-cell" color="#FFFFFF"></div>
+                </a>
+                <a href="javascript:fontBgColorStyle('#CFEE91')">
+                    <div class="color-cell" color="#CFEE91"></div>
+                </a>
+                <a href="javascript:fontBgColorStyle('#657DC4')">
+                    <div class="color-cell" color="#657DC4"></div>
+                </a>
+                <a href="javascript:fontBgColorStyle('#66BFBF')">
+                    <div class="color-cell" color="#66BFBF"></div>
+                </a>
+                <a href="javascript:fontBgColorStyle('#FFCE00')">
+                    <div class="color-cell" color="#FFCE00"></div>
+                </a>
+                <a href="javascript:fontBgColorStyle('#FCFEFE')">
+                    <div class="color-cell" color="#FCFEFE"></div>
+                </a>
+                <br>
+                <a href="javascript:fontBgColorStyle('#FFDE25')">
+                    <div class="color-cell" color="#FFDE25"></div>
+                </a>
+                <a href="javascript:fontBgColorStyle('#F76B8A')">
+                    <div class="color-cell" color="#F76B8A"></div>
+                </a>
+                <a href="javascript:fontBgColorStyle('#1989AC')">
+                    <div class="color-cell" color="#1989AC"></div>
+                </a>
+                <a href="javascript:fontBgColorStyle('#155263')">
+                    <div class="color-cell" color="#155263"></div>
+                </a>
+                <a href="javascript:fontBgColorStyle('#FF6F3C')">
+                    <div class="color-cell" color="#FF6F3C"></div>
+                </a>
+                <a href="javascript:fontBgColorStyle('#088C6F')">
+                    <div class="color-cell" color="#088C6F"></div>
+                </a>
+                <br>
+            </div>
+        </div>
+    </div>
+    <!--font style-->
+    <div class="btn-group">
+        <div class="btn-group">
+            <button type="button" class="btn btn-default" id="btn-bold" onclick="fontStyle('bold')" title="CTRL+B" tooltip="true"><i class="fa fa-bold" aria-hidden="true"></i></button>
+        </div>
+        <button type="button" class="btn btn-default" id="btn-italic" onclick="fontStyle('italic')"><i class="fa fa-italic" aria-hidden="true"></i></button>
+        <button type="button" class="btn btn-default" id="btn-underline" onclick="fontStyle('underLine')"><i class="fa fa-underline" aria-hidden="true"></i></button>
+        <button type="button" class="btn btn-default" id="btn-strikethrough" onclick="fontStyle('strikeThrough')"><i class="fa fa-strikethrough" aria-hidden="true"></i></button>
+        <button type="button" class="btn btn-default" id="btn-clearFontStyle" onclick="clearFontStyle()"><i class="fa fa-eraser" aria-hidden="true"></i></button>
+    </div>
+
+    <!--对齐-->
+    <div class="btn-group">
+        <button type="button" class="btn btn-default text-align" onclick="justifyAlign('left')" id="btn-align-left"><i
+                class="fa fa-align-left" aria-hidden="true"></i></button>
+        <button type="button" class="btn btn-default text-align" onclick="justifyAlign('center')" id="btn-align-center">
+            <i class="fa fa-align-center" aria-hidden="true"></i></button>
+        <button type="button" class="btn btn-default text-align" onclick="justifyAlign('right')" id="btn-align-right"><i
+                class="fa fa-align-right" aria-hidden="true"></i></button>
+    </div>
+
+
+    <!--序列-->
+    <div class="btn-group">
+        <button type="button" class="btn btn-default" onclick="insertList(true)"><i class="fa fa-list-ol"
+                                                                                    aria-hidden="true"></i></button>
+        <button type="button" class="btn btn-default" onclick="insertList(false)"><i class="fa fa-list-ul"
+                                                                                     aria-hidden="true"></i></button>
+    </div>
+    <!--插件-->
+    <div class="btn-group">
+        <button type="button" class="btn btn-default"><i class="fa fa-th" aria-hidden="true"></i></button>
+        <button type="button" class="btn btn-default" onclick="insertCodeStyle()"><i class="fa fa-code" aria-hidden="true"></i></button>
+        <button type="button" class="btn btn-default"><i class="fa fa-sitemap" aria-hidden="true"></i></button>
+        <button type="button" class="btn btn-default" onclick="insertBlockquoteStyle()"><i class="fa fa-chain-broken" aria-hidden="true"></i></button>
+        <button type="button" class="btn btn-default"><i class="fa fa-smile-o" aria-hidden="true"></i></button>
+    </div>
+</div>
+<div class="clearfix"></div>
+<div id="rich-body" contenteditable="true" style="margin: 10px">
+</div>
+<!--引入js-->
+<script src="../../static/js/jquery-2.0.3.js"></script>
+<script src="../../static/js/bootstrap.min.js"></script>
+<script src="../../static/js/richText.js"></script>
+<script src="../../static/js/uploadPic.js"></script>
+<script src="../../static/js/keyMap.js"></script>
+<script src="../../static/js/prettify.js"></script>
+</body>
+</html>
