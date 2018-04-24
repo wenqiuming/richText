@@ -65,6 +65,7 @@ $(window).keydown(function (e) {
         }else{
             $(lineNode).html(rootBelow.outerHTML);
         }
+
         var brNode = $("<br/>")[0];
         rootNode.insertBefore(lineNode, rootBelow);
         rootNode.insertBefore(brNode, rootBelow);
