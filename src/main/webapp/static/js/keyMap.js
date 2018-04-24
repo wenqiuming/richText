@@ -22,6 +22,7 @@ $(window).keyup(function (e) {
             return;
         }
     }
+    //restoreSelection();
 });
 
 $(window).keydown(function (e) {
