@@ -141,13 +141,14 @@ function justifyAlign(asign) {
     document.execCommand("justify" + asign.substring(0, 1).toUpperCase() + asign.substring(1), false, null);
     selectAlign(asign);
 }
+
 //段落
 //在插入点或选中文字上创建一个有序列表
 function insertList(isOrder) {
-    if(isOrder){
-        document.execCommand("insertOrderedList",false,null);
-    }else{
-        document.execCommand("insertUnorderedList",false,null);
+    if (isOrder) {
+        document.execCommand("insertOrderedList", false, null);
+    } else {
+        document.execCommand("insertUnorderedList", false, null);
     }
 }
 
@@ -251,18 +252,18 @@ function getRangeHtml() {
     if (userSelection.getRangeAt) {
         var range = userSelection.getRangeAt(0);
         var documentFragment = range.cloneContents();
-        if (documentFragment.childNodes&&documentFragment.childNodes.length>0){
-            var htmlStr="";
-            for(var i=0;i<documentFragment.childNodes.length;i++){
-                var childNode=documentFragment.childNodes[i];
-                if(childNode.localName){
-                    htmlStr+="<"+childNode.localName+">"+childNode.innerHTML+"</"+childNode.localName+">";
-                } else{
-                    htmlStr+="<div>"+childNode.nodeValue+"</div>";
+        if (documentFragment.childNodes && documentFragment.childNodes.length > 0) {
+            var htmlStr = "";
+            for (var i = 0; i < documentFragment.childNodes.length; i++) {
+                var childNode = documentFragment.childNodes[i];
+                if (childNode.localName) {
+                    htmlStr += "<" + childNode.localName + ">" + childNode.innerHTML + "</" + childNode.localName + ">";
+                } else {
+                    htmlStr += "<div>" + childNode.nodeValue + "</div>";
                 }
             }
             return htmlStr;
-        }else{
+        } else {
             var select_htmlText = documentFragment.textContent;
             return select_htmlText;
         }
@@ -288,7 +289,7 @@ function setTextTailSelection() {
     // 光标移动到到原来的位置加上新内容的长度
     range.setStart(textNode, rangeEndOffset);
     // 光标开始和光标结束重叠
-   range.collapse(true);
+    range.collapse(true);
     // 清除选定对象的所有光标对象
     selection.removeAllRanges();
     // 插入新的光标对象
@@ -384,21 +385,23 @@ function selectAlign(asign) {
 }
 
 function insertBlockquoteStyle() {
-    var selectiveHtml=getRangeHtml();
-    if($.trim(selectiveHtml)===''){
-        selectiveHtml="&zwnj;";
+    var selectiveHtml = getRangeHtml();
+    if ($.trim(selectiveHtml) === '') {
+        selectiveHtml = "&zwnj;";
     }
-    var codeStr="<div class='blockquote-body' contenteditable='true'>"+selectiveHtml+"</div><br/>";
-    document.execCommand("insertText",false,"\r\n");
-    document.execCommand("insertHtml",false,codeStr);
-}function insertCodeStyle() {
-    var selectiveHtml=getRangeHtml();
-    if($.trim(selectiveHtml)===''){
-        selectiveHtml="<div>&zwnj;</div>";
+    var codeStr = "<div class='blockquote-body' contenteditable='true'>" + selectiveHtml + "</div><br/>";
+    document.execCommand("insertText", false, "\r\n");
+    document.execCommand("insertHtml", false, codeStr);
+}
+
+function insertCodeStyle() {
+    var selectiveHtml = getRangeHtml();
+    if ($.trim(selectiveHtml) === '') {
+        selectiveHtml = "<div>&zwnj;</div>";
     }
-    var codeStr="<pre class='prettyprint' contenteditable='true'>"+selectiveHtml+"</pre><br/>";
-    document.execCommand("insertText",false,"\r\n");
-    document.execCommand("insertHtml",false,codeStr);
+    var codeStr = "<pre class='prettyprint' contenteditable='true'>" + selectiveHtml + "</pre><br/>";
+    document.execCommand("insertText", false, "\r\n");
+    document.execCommand("insertHtml", false, codeStr);
     $(".prettyprint").removeClass("prettyprinted");
     prettyPrint();
 }
@@ -407,8 +410,9 @@ function insertBlockquoteStyle() {
 var settings = {
     clickIconEvent: clickIcon
 };
+
 function clickIcon(val) {
-    var emoji="<span class='"+val+"' contenteditable='false'></span>";
+    var emoji = "<span class='" + val + "' contenteditable='false'></span>";
     // document.execCommand("insertHtml",true,emoji);
     // var selection = window.getSelection();
     // var range = selection.getRangeAt(0);
@@ -422,44 +426,74 @@ function clickIcon(val) {
     //     endNode.remove();
     // }
     var selection = window.getSelection ? window.getSelection() : document.getSelection();
-    selection.removeAllRanges();
-    selection.addRange(customRange);
-    //document.execCommand("insertHtml",false,emoji);
-    var curentNode=selection.baseNode;
-    var richText=document.getElementById("rich-body");
-    if(curentNode===richText){
-        $(curentNode).append(emoji);
+    //selection.removeAllRanges();
+    //selection.addRange(customRange);
+    //取得光标所在的容器节点
+    var anchorNode = selection.anchorNode;
+    //获取光标容器的上级容器
+    var parentNode = anchorNode.parentNode;
+    //如果容器文本节点
+    if (anchorNode.nodeType === 3) {
+        var splitIndex = selection.anchorOffset;
+        var textBefore = "";
+        var textAfter = "";
+        if (anchorNode.nodeValue.length > 0) {
+            textBefore = anchorNode.nodeValue.substr(0, splitIndex);
+            textAfter = anchorNode.nodeValue.substr(splitIndex);
+        }
+        var realHtml = textBefore + emoji + textAfter;
+        var newEle = document.createElement("span");
+        newEle.innerHTML = realHtml;
+        //插入新节点
+        parentNode.insertBefore(newEle, anchorNode);
+        //删除旧节点
+        anchorNode.remove();
         return;
-    }
-    var anchorNode=selection.anchorNode.parentNode;
-    var splitIndex=selection.anchorOffset;
-    var textBefore="";
-    var textAfter="";
-    if(curentNode.nodeValue){
-        textBefore=curentNode.nodeValue.substr(0,splitIndex);
-        textAfter=curentNode.nodeValue.substr(splitIndex);
-    }
-    var real="";
-    for(var i=0;i<anchorNode.childNodes.length;i++){
-        if(curentNode===anchorNode.childNodes[i]){
-            real+=textBefore+emoji+textAfter;
-        } else{
-            if(anchorNode.childNodes[i].nodeType===3){
-                real+=anchorNode.childNodes[i].textContent;
-            } else{
-                real+=anchorNode.childNodes[i].outerHTML;
-            }
-
+    } else {//容器节点为块元素
+        //获取光标节点下标
+        var nodeIndex = selection.anchorOffset;
+        //新增节点
+        var eleSpan = $(emoji)[0];
+        if(nodeIndex===0){
+           anchorNode.insertBefore(eleSpan,anchorNode.childNodes[nodeIndex]);
+        }else{
+            insertAfter(eleSpan,anchorNode.childNodes[nodeIndex-1]);
         }
     }
-    //$(anchorNode).text("abc");
-    $(anchorNode).html(real);
-   // console.log(customRange.endContainer);
 }
+
+function insertAfter(newEl, targetEl) {
+    var parentEl = targetEl.parentNode;
+
+    if (parentEl.lastChild === targetEl) {
+        parentEl.appendChild(newEl);
+    }
+    else {
+        parentEl.insertBefore(newEl, targetEl.nextSibling);
+    }
+}
+
+
+function getTreeTextLength(node) {
+    if (node.nodeType === 3) {
+        return node.nodeValue.length;
+    } else {
+        var totalLength = 0;
+        for (var i = 0; i < node.childNodes.length; i++) {
+            if (node.childNodes[i].nodeType === 3) {
+                totalLength +=node.childNodes[i].nodeValue.length;
+            } else {
+                totalLength += getTreeTextLength(node.childNodes[i]);
+            }
+        }
+        return totalLength;
+    }
+}
+
 $("#txt_boostrap_icon").iconPicker(settings);
 
 
-function saveCurrentRange () {
+function saveCurrentRange() {
     // 获取selection对象
     var selection = window.getSelection ? window.getSelection() : document.getSelection();
     if (!selection.rangeCount) {
@@ -483,13 +517,15 @@ function saveCurrentRange () {
 }
 
 var customRange;
+
 // 设置Range对象
-function restoreSelection () {
+function restoreSelection() {
     // 首先获取selection对象并清除当前的Range
     const selection = window.getSelection ? window.getSelection() : document.getSelection();
-    customRange=selection.getRangeAt(0);
+    customRange = selection.getRangeAt(0);
 }
+
 $("#txt_boostrap_icon").click(function () {
-    restoreSelection();
+    //restoreSelection();
 });
 
