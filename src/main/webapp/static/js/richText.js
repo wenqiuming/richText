@@ -311,23 +311,6 @@ function keepLastIndex(obj) {
     }
 }
 
-function restoreSelection() {
-
-    var selection = window.getSelection();
-
-    if (selection) {
-
-        try {
-            selection.removeAllRanges();
-            /*清空所有Range对象*/
-        } catch (ex) {
-            /*IE*/
-            document.body.createTextRange().select();
-            document.selection.empty();
-        }
-        ;
-    }
-}
 
 //获取当前光标所在处样式
 function getCaretStyle() {
@@ -419,3 +402,94 @@ function insertBlockquoteStyle() {
     $(".prettyprint").removeClass("prettyprinted");
     prettyPrint();
 }
+
+//bootstrap icon初始化
+var settings = {
+    clickIconEvent: clickIcon
+};
+function clickIcon(val) {
+    var emoji="<span class='"+val+"' contenteditable='false'></span>";
+    // document.execCommand("insertHtml",true,emoji);
+    // var selection = window.getSelection();
+    // var range = selection.getRangeAt(0);
+    // var endNode=range.endContainer.lastChild;
+    // if(endNode.nodeName!=='BR'){
+    //     var preNode=endNode.previousSibling;
+    //     if(preNode.nodeName!=='BR'){
+    //         preNode.remove();
+    //     }
+    // } else{
+    //     endNode.remove();
+    // }
+    var selection = window.getSelection ? window.getSelection() : document.getSelection();
+    selection.removeAllRanges();
+    selection.addRange(customRange);
+    //document.execCommand("insertHtml",false,emoji);
+    var curentNode=selection.baseNode;
+    var richText=document.getElementById("rich-body");
+    if(curentNode===richText){
+        $(curentNode).append(emoji);
+        return;
+    }
+    var anchorNode=selection.anchorNode.parentNode;
+    var splitIndex=selection.anchorOffset;
+    var textBefore="";
+    var textAfter="";
+    if(curentNode.nodeValue){
+        textBefore=curentNode.nodeValue.substr(0,splitIndex);
+        textAfter=curentNode.nodeValue.substr(splitIndex);
+    }
+    var real="";
+    for(var i=0;i<anchorNode.childNodes.length;i++){
+        if(curentNode===anchorNode.childNodes[i]){
+            real+=textBefore+emoji+textAfter;
+        } else{
+            if(anchorNode.childNodes[i].nodeType===3){
+                real+=anchorNode.childNodes[i].textContent;
+            } else{
+                real+=anchorNode.childNodes[i].outerHTML;
+            }
+
+        }
+    }
+    //$(anchorNode).text("abc");
+    $(anchorNode).html(real);
+   // console.log(customRange.endContainer);
+}
+$("#txt_boostrap_icon").iconPicker(settings);
+
+
+function saveCurrentRange () {
+    // 获取selection对象
+    var selection = window.getSelection ? window.getSelection() : document.getSelection();
+    if (!selection.rangeCount) {
+        return
+    }
+    const content = this.$refs.content;
+    for (var i = 0; i < selection.rangeCount; i++) {
+        // 从selection中获取第一个Range对象
+        const range = selection.getRangeAt(0);
+        var start = range.startContainer;
+        var end = range.endContainer;
+        // 兼容IE11 node.contains(textNode) 永远 return false的bug
+        start = start.nodeType === Node.TEXT_NODE ? start.parentNode : start;
+        end = end.nodeType === Node.TEXT_NODE ? end.parentNode : end;
+        if (content.contains(start) && content.contains(end)) {
+            // Range对象被保存在this.range
+            this.range = range;
+            break
+        }
+    }
+}
+
+var customRange;
+// 设置Range对象
+function restoreSelection () {
+    // 首先获取selection对象并清除当前的Range
+    const selection = window.getSelection ? window.getSelection() : document.getSelection();
+    customRange=selection.getRangeAt(0);
+}
+$("#txt_boostrap_icon").click(function () {
+    restoreSelection();
+});
+
