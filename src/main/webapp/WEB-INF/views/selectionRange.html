@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>selection</title>
+    <style>
+        .rich-body {
+            border: 1px solid #cccccc;
+            min-height: 400px;
+        }
+        .div-img{
+            width: 100px;
+            height: 100px;
+            background-color: #555555;
+            display: inline-block;
+            border: 1px solid #cccccc;
+            line-height: 0;
+            vertical-align: bottom;
+        }
+    </style>
+</head>
+<body>
+<div contenteditable="true" class="rich-body">
+    <div class="line-div"><br/></div>
+    <div class="line-div"><div class="div-img" contenteditable="false"></div></div>
+    <div class="line-div"><div class="div-img" contenteditable="false"></div></div>
+</div>
+</body>
+<script src="../../static/js/jquery-2.0.3.js"></script>
+<script src="../../static/js/bootstrap.min.js"></script>
+<script>
+    $(window).keydown(function (e) {
+        var selection = window.getSelection ? window.getSelection() : document.getSelection();
+        var offset = selection.anchorOffset;
+        var anchorNode = selection.anchorNode;
+        if (e.keyCode === 13) {
+            e.preventDefault();
+            if (anchorNode === rootNode) {
+                var lineNode = $("<div class='line-div'><br/></div>")[0];
+                $(rootNode).append(lineNode);
+            } else {
+                createNewLine(selection, offset);
+                remainContent(selection, offset);
+                var operNode = findLineDiv(anchorNode);
+                console.log(selection);
+                if ($(anchorNode).hasClass("line-div") &&offset===0) {
+                    console.log("do nothing");
+                }else{
+                    selection.collapse(operNode.nextSibling, 0);
+                }
+//                }else{
+//                    selection.collapse(operNode.nextSibling, 0);
+//                }
+            }
+        }
+    });
+
+    /**
+     * 富文本主体
+     **/
+    var rootNode = $(".rich-body")[0];
+
+    /**
+     * 换行后,余留本行数据处理
+     * */
+    function remainContent(selection, offset) {
+        var anchorNode = selection.anchorNode;
+        var lineDiv = findLineDiv(anchorNode);
+        if (lineDiv === anchorNode) {
+            return;
+        }
+        if (anchorNode.nodeType === 3) {
+            var allContent = anchorNode.textContent;
+            anchorNode.textContent = allContent.substring(0, offset);
+        }
+        var lineDivBelow = findLineDivBelow(anchorNode);
+        deleteOtherChildNodesAfterIndex(lineDiv, getPosInParentNode(lineDivBelow, lineDiv));
+        if (lineDiv.innerHTML === '') {
+            $(lineDiv).append($("<br/>")[0]);
+        }
+    }
+
+    /**
+     * find the node below the root node
+     * @param node focus node
+     * @returns {*}
+     */
+    function findRootBelow(node) {
+        if (node.parentNode === rootNode) {
+            return node;
+        } else {
+            return findRootBelow(node.parentNode);
+        }
+    }
+
+    /***
+     * find a line div by self or childNode
+     * @param node
+     * @returns {*}
+     */
+    function findLineDiv(node) {
+        if ($(node).hasClass("line-div")) {
+            return node;
+        } else {
+            return findLineDiv(node.parentNode);
+        }
+    }
+
+    /**
+     * find line div direct childNode
+     * @param node
+     * @returns {*}
+     */
+    function findLineDivBelow(node) {
+        if ($(node.parentNode).hasClass("line-div")) {
+            return node;
+        } else {
+            return findLineDivBelow(node.parentNode);
+        }
+    }
+
+    /**
+     * return the index of node in it`s parentNode childNodes postion
+     * @param node
+     * @param parentNode
+     * @returns {number}
+     */
+    function getPosInParentNode(node, parentNode) {
+        for (var i = 0; i < parentNode.childNodes.length; i++) {
+            if (node === parentNode.childNodes[i]) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    /**
+     * 删除索引(index)后所有子节点
+     * @param parentNode
+     * @param index
+     */
+    function deleteOtherChildNodesAfterIndex(parentNode, index) {
+        var childLength = parentNode.childNodes.length;
+        if (index + 1 > childLength) {
+            return;
+        }
+        for (var i = index + 1; i < childLength; i++) {
+            parentNode.lastChild.remove();
+        }
+    }
+
+    /**
+     * 为新父节点新增childNodes
+     * childNodes为旧父节点索引后所有子节点
+     * @param newParentNode
+     * @param parentNode
+     * @param index
+     */
+    function fillChildAterIndex(newParentNode, parentNode, index) {
+        var childLength = parentNode.childNodes.length;
+        if (index + 1 > childLength) {
+            return;
+        }
+        for (var i = index + 1; i < childLength; i++) {
+            var cloneNode = parentNode.childNodes[i].cloneNode(true);
+            newParentNode.appendChild(cloneNode);
+        }
+    }
+
+    /**
+     * 新增一行node
+     * @param selection
+     * @param offset
+     */
+    function createNewLine(selection, offset) {
+        var anchorNode = selection.anchorNode;
+        var newLineDiv = $("<div class='line-div'></div>")[0];
+        var lineDiv = findLineDiv(anchorNode);
+        if (anchorNode === lineDiv) {
+            $(newLineDiv).append("<br/>");
+            if (offset>0){
+                insertAfter(newLineDiv, findRootBelow(anchorNode));
+            }else{
+                insertBefore(newLineDiv, findRootBelow(anchorNode));
+            }
+            return;
+        }
+        if (isLineEnd(anchorNode, offset)) {
+            $(newLineDiv).append("<br/>");
+            insertAfter(newLineDiv, findRootBelow(anchorNode));
+            return;
+        }
+        var lineDivBelow = findLineDivBelow(anchorNode);
+        var allContent = null;
+        //clone node
+        if (anchorNode.nodeType === 3) {
+            allContent = anchorNode.textContent;
+            anchorNode.textContent = allContent.substring(offset, allContent.length);
+        }
+        var cloneNode = findLineDivBelow(anchorNode).cloneNode(true);
+        if (allContent !== null) {
+            anchorNode.textContent = allContent;
+        }
+        newLineDiv.append(cloneNode);
+        fillChildAterIndex(newLineDiv, lineDiv, getPosInParentNode(lineDivBelow, lineDiv));
+        insertAfter(newLineDiv, findRootBelow(anchorNode));
+    }
+
+    /**
+     * 在某个节点后插入兄弟节点
+     * @param newEl
+     * @param targetEl
+     */
+    function insertAfter(newEl, targetEl) {
+        var parentEl = targetEl.parentNode;
+
+        if (parentEl.lastChild === targetEl) {
+            parentEl.appendChild(newEl);
+        }
+        else {
+            parentEl.insertBefore(newEl, targetEl.nextSibling);
+        }
+    }
+
+    /**
+     * 在兄弟节点前面插入节点
+     * @param newEl
+     * @param targetEl
+     */
+    function insertBefore(newEl, targetEl) {
+        var parentEl = targetEl.parentNode;
+        parentEl.insertBefore(newEl, targetEl);
+    }
+
+    /**
+     * 判断是否行尾节点
+     * @param anchorNode
+     * @param offset
+     * @returns {boolean}
+     */
+    function isLineEnd(anchorNode, offset) {
+        var lineDiv = findLineDiv(anchorNode);
+        if (lineDiv.length === 0) return true;
+        if (anchorNode.nodeType === 3 && anchorNode.textContent.length > offset) {
+            return false;
+        }
+        return isEndChild(anchorNode, anchorNode.parentNode);
+    }
+
+    /**
+     * 判断是否是父节点的最后子节点
+     * @param node
+     * @param parentNode
+     * @returns {boolean}
+     */
+    function isEndChild(node, parentNode) {
+        if (parentNode.parentNode !== rootNode) {
+            var result = parentNode.lastChild === node;
+            if (!result) {
+                return false;
+            } else {
+                return isEndChild(node.parentNode, parentNode.parentNode);
+            }
+        }
+        return parentNode.lastChild === node;
+    }
+
+
+    //    ---------------------------------------删除操作-----------------------------------------
+
+    $(window).keyup(function (e) {
+        var selection = window.getSelection ? window.getSelection() : document.getSelection();
+        if (e.keyCode === 8) {
+            if (rootNode.childNodes.length === 0) {
+                var lineNode = $("<div class='line-div'><br/></div>")[0];
+                $(rootNode).append(lineNode);
+                selection.collapse(lineNode, 0);
+            }
+        }
+        var anchorNode=selection.anchorNode;
+        if ($(anchorNode).hasClass("div-img")){
+            alert();
+            selection.collapse(anchorNode.previousSibling, 0);
+        }
+    });
+
+</script>
+</html>

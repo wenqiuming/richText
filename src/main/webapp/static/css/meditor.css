@@ -1,0 +1,43 @@
+.meditor-header{
+    padding-left: 10px;
+    color: #444;
+    background-color: #f2f2f2;
+    clear: both;
+}
+.meditor-header button{
+    height: 48px;
+    width: 48px;
+    border: none;
+    background-color: #f2f2f2;
+    outline: none !important;
+    border-radius: 0px !important;
+}
+.meditor-header button i{
+    font-size: 14px;
+    color: #555;
+}
+.meditor-body{
+    border: 1px solid #cccccc;
+    border-top: none;
+    padding: 3px;
+    min-height: 300px;
+    outline: none !important;
+}
+.meditor-header .header-name{
+    font-weight: 500;
+}
+span[font-size-style='12']{
+    font-size: 12px;
+}
+span[font-size-style='14']{
+    font-size: 14px;
+}
+span[font-size-style='16']{
+    font-size: 16px;
+}
+span[font-size-style='18']{
+    font-size: 18px;
+}
+span[font-size-style='20']{
+    font-size: 20px;
+}
