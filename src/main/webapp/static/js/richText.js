@@ -380,8 +380,7 @@ function getBeforePos() {
 }
 
 function selectAlign(asign) {
-    $(".text-align").css({"background-color": "#fff"});
-    $("#btn-align-" + asign).css({"background-color": "#eee"});
+    $("#btn-align-" + asign).css({"background-color": "#ccc"});
 }
 
 function insertBlockquoteStyle() {

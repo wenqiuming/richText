@@ -10,7 +10,16 @@
     border: none;
     background-color: #f2f2f2;
     outline: none !important;
-    border-radius: 0px !important;
+    border-radius: 0 !important;
+    margin-left: 0 !important;
+}
+#show_font_size,.header-name{
+    display: inline-block;
+    width: 26px;
+    text-align: center;
+}
+.font-style-active{
+    background-color: #cccccc !important;
 }
 .meditor-header button i{
     font-size: 14px;
@@ -40,4 +49,200 @@ span[font-size-style='18']{
 }
 span[font-size-style='20']{
     font-size: 20px;
+}span[font-size-style='22']{
+    font-size: 22px;
+}
+span[font-size-style='24']{
+    font-size: 24px;
+}
+
+/**
+font color
+ */
+
+
+.select-number a{
+    padding: 8px 14px !important;
+}
+.select-number li{
+}
+.select-number{
+    min-width: 60px;
+    padding: 0;
+}
+
+.font-color{
+    display: inline-block;
+    padding:0 16px;
+    border-bottom: 1px solid #333333;
+}
+.btn-font-color{
+    position: relative;
+}
+#color-line{
+    position: absolute;
+    width: 28px;
+    height: 4px;
+    left: 5px;
+    bottom: 0;
+    background-color: #333;
+}
+.color-cell{
+// cursor: pointer;
+}
+.font-bg{
+    display: inline-block;
+    border: 1px solid #cccccc;
+    padding: 3px;
+    background-color: #FFFFFF;
+}
+.btn-font-bg{
+    padding: 5px 12px;
+}
+.color-panel{
+    padding: 5px;
+    text-align: center;
+    cursor: pointer;
+}
+.dropdown-menu{
+    z-index: 9999;
+}
+.color-cell{
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    background-color: #333333;
+    border: 1px solid #cccccc;
+}
+.color-cell[color="#658525"]{
+    background-color: #658525;
+}
+.color-cell[color="#CFEE91"]{
+    background-color: #CFEE91;
+}
+.color-cell[color="#657DC4"]{
+    background-color: #657DC4;
+}
+.color-cell[color="#66BFBF"]{
+    background-color: #66BFBF;
+}
+.color-cell[color="#FFCE00"]{
+    background-color: #FFCE00;
+}
+.color-cell[color="#FCFEFE"]{
+    background-color: #FCFEFE;
+}
+.color-cell[color="#FFDE25"]{
+    background-color: #FFDE25;
+}
+.color-cell[color="#F76B8A"]{
+    background-color: #F76B8A;
+}
+.color-cell[color="#1989AC"]{
+    background-color: #1989AC;
+}
+.color-cell[color="#155263"]{
+    background-color: #155263;
+}
+.color-cell[color="#FF6F3C"]{
+    background-color: #FF6F3C;
+}
+.color-cell[color="#088C6F"]{
+    background-color: #088C6F;
+}
+.color-cell[color="#FFFFFF"]{
+    background-color: #FFFFFF;
+}
+.color-panel a{
+    text-decoration: none;
+}
+
+
+/*stretch picture css*/
+.stretch-photo-container .left-bottom-focus {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-bottom: 1px solid #cccccc;
+    border-left: 1px solid #cccccc;
+    position: absolute;
+    left: -6px;
+    bottom: -6px;
+}
+
+.stretch-photo-container .left-top-focus {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-top: 1px solid #cccccc;
+    border-left: 1px solid #cccccc;
+    position: absolute;
+    left: -6px;
+    top: -6px;
+}
+.stretch-photo-container .left-bottom-focus {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-bottom: 1px solid #cccccc;
+    border-left: 1px solid #cccccc;
+    position: absolute;
+    left: -6px;
+    bottom: -6px;
+}
+
+.stretch-photo-container .right-top-focus {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-top: 1px solid #cccccc;
+    border-right: 1px solid #cccccc;
+    position: absolute;
+    right: -6px;
+    top: -6px;
+}
+.stretch-photo-container .right-bottom-focus{
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    background-color: #8c8c8c;
+    position: absolute;
+    right: -6px;
+    bottom: -6px;
+    cursor: move;
+}
+.stretch-photo-container{
+    display: inline-block;
+    position: relative;
+    margin: 0 1px;
+    max-width: 100%;
+}
+.stretch-photo-container img{
+    max-width: 100%;
+}
+
+.stretch-photo-container img::selection {
+    background:none;
+}
+
+.stretch-photo-container img::-moz-selection {
+    background:none;
+}
+
+.stretch-photo-container img::-webkit-selection {
+    background:none;
+}
+
+/*code */
+.code-body{
+    min-height: 1em;
+    width: 100%;
+    background-color: #333333;
+    color: #FFFFFF;
+}
+.blockquote-body{
+    background-color: #f7f7f7;
+    color: #4d4d4c;
+    border-left: 4px solid #2b542c;
+    padding: 6px;
 }

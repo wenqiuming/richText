@@ -27,8 +27,13 @@
         	element=this;
             if(!settings.buttonOnly && $(this).data("iconPicker")==undefined ){
                 $(this).click(function(){
-                    createUI($(element));
-                    showList($(element),icons);
+                	var existMenus=$(".icon-popup").remove();
+                	if (existMenus.length>0){
+                		removeInstance();
+					}else{
+                        createUI($(element));
+                        showList($(element),icons);
+					}
                 });
             	$(this).data("iconPicker",{attached:true});
             }

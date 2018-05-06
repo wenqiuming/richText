@@ -30,9 +30,10 @@
         <!--font size-->
         <div class="btn-group">
             <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" title="字号"
-                    tooltip="true">
-                <b id="show_font_size">2</b>&nbsp; <span class="caret"></span></button>
+                    tooltip="true" style="width: 58px">
+                <b id="show_font_size">默认</b>&nbsp; <span class="caret"></span></button>
             <ul class="dropdown-menu  select-number" role="menu">
+                <li class="font-pick"><a href="javascript:fontSizeStyle(0)">默认</a></li>
                 <li class="font-pick"><a href="javascript:fontSizeStyle(12)">12</a></li>
                 <li class="font-pick"><a href="javascript:fontSizeStyle(14)">14</a></li>
                 <li class="font-pick"><a href="javascript:fontSizeStyle(16)">16</a></li>
@@ -166,10 +167,13 @@
     </div>
 </div>
 <div class="meditor-body" contenteditable="true">
-    <div class="line-div"><span><b>absd</b>323</span></div>
+    <div class="line-div">AAA<span><b>absd</b>323</span></div>
 </div>
 </body>
 <script src="../../static/js/jquery-2.0.3.js"></script>
 <script src="../../static/js/bootstrap.min.js"></script>
 <script src="../../static/js/meditor-core.js"></script>
+<script src="../../static/js/uploadPic.js"></script>
+<script src="../../static/js/prettify.js"></script>
+<script src="../../static/js/iconPicker.js"></script>
 </html>
