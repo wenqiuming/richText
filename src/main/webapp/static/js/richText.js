@@ -287,7 +287,7 @@ function setTextTailSelection() {
     // 获取光标位置
     var rangeEndOffset = range.endOffset;
     // 光标移动到到原来的位置加上新内容的长度
-    range.setStart(textNode, rangeEndOffset);
+    range.setStart(textNode, rangeEndOffset+1);
     // 光标开始和光标结束重叠
     range.collapse(true);
     // 清除选定对象的所有光标对象
@@ -412,21 +412,7 @@ var settings = {
 
 function clickIcon(val) {
     var emoji = "<span class='" + val + "' contenteditable='false'></span>";
-    // document.execCommand("insertHtml",true,emoji);
-    // var selection = window.getSelection();
-    // var range = selection.getRangeAt(0);
-    // var endNode=range.endContainer.lastChild;
-    // if(endNode.nodeName!=='BR'){
-    //     var preNode=endNode.previousSibling;
-    //     if(preNode.nodeName!=='BR'){
-    //         preNode.remove();
-    //     }
-    // } else{
-    //     endNode.remove();
-    // }
     var selection = window.getSelection ? window.getSelection() : document.getSelection();
-    //selection.removeAllRanges();
-    //selection.addRange(customRange);
     //取得光标所在的容器节点
     var anchorNode = selection.anchorNode;
     //获取光标容器的上级容器
@@ -459,6 +445,8 @@ function clickIcon(val) {
             insertAfter(eleSpan,anchorNode.childNodes[nodeIndex-1]);
         }
     }
+    //设置光标
+    setTextTailSelection();
 }
 
 function insertAfter(newEl, targetEl) {
@@ -472,59 +460,7 @@ function insertAfter(newEl, targetEl) {
     }
 }
 
-
-function getTreeTextLength(node) {
-    if (node.nodeType === 3) {
-        return node.nodeValue.length;
-    } else {
-        var totalLength = 0;
-        for (var i = 0; i < node.childNodes.length; i++) {
-            if (node.childNodes[i].nodeType === 3) {
-                totalLength +=node.childNodes[i].nodeValue.length;
-            } else {
-                totalLength += getTreeTextLength(node.childNodes[i]);
-            }
-        }
-        return totalLength;
-    }
-}
-
 $("#txt_boostrap_icon").iconPicker(settings);
 
 
-function saveCurrentRange() {
-    // 获取selection对象
-    var selection = window.getSelection ? window.getSelection() : document.getSelection();
-    if (!selection.rangeCount) {
-        return
-    }
-    const content = this.$refs.content;
-    for (var i = 0; i < selection.rangeCount; i++) {
-        // 从selection中获取第一个Range对象
-        const range = selection.getRangeAt(0);
-        var start = range.startContainer;
-        var end = range.endContainer;
-        // 兼容IE11 node.contains(textNode) 永远 return false的bug
-        start = start.nodeType === Node.TEXT_NODE ? start.parentNode : start;
-        end = end.nodeType === Node.TEXT_NODE ? end.parentNode : end;
-        if (content.contains(start) && content.contains(end)) {
-            // Range对象被保存在this.range
-            this.range = range;
-            break
-        }
-    }
-}
-
-var customRange;
-
-// 设置Range对象
-function restoreSelection() {
-    // 首先获取selection对象并清除当前的Range
-    const selection = window.getSelection ? window.getSelection() : document.getSelection();
-    customRange = selection.getRangeAt(0);
-}
-
-$("#txt_boostrap_icon").click(function () {
-    //restoreSelection();
-});
 

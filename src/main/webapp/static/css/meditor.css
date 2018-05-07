@@ -1,10 +1,11 @@
-.meditor-header{
+.meditor-header {
     padding-left: 10px;
     color: #444;
     background-color: #f2f2f2;
     clear: both;
 }
-.meditor-header button{
+
+.meditor-header button {
     height: 48px;
     width: 48px;
     border: none;
@@ -13,46 +14,59 @@
     border-radius: 0 !important;
     margin-left: 0 !important;
 }
-#show_font_size,.header-name{
+
+#show_font_size, .header-name {
     display: inline-block;
     width: 26px;
     text-align: center;
 }
-.font-style-active{
+
+.font-style-active {
     background-color: #cccccc !important;
 }
-.meditor-header button i{
+
+.meditor-header button i {
     font-size: 14px;
     color: #555;
 }
-.meditor-body{
+
+.meditor-body {
     border: 1px solid #cccccc;
     border-top: none;
     padding: 3px;
     min-height: 300px;
     outline: none !important;
 }
-.meditor-header .header-name{
+
+.meditor-header .header-name {
     font-weight: 500;
 }
-span[font-size-style='12']{
+
+font[size='1'] {
     font-size: 12px;
 }
-span[font-size-style='14']{
+
+font[size='2'] {
     font-size: 14px;
 }
-span[font-size-style='16']{
+
+font[size='3'] {
     font-size: 16px;
 }
-span[font-size-style='18']{
+
+font[size='4'] {
     font-size: 18px;
 }
-span[font-size-style='20']{
+
+font[size='5'] {
     font-size: 20px;
-}span[font-size-style='22']{
+}
+
+font[size='6'] {
     font-size: 22px;
 }
-span[font-size-style='24']{
+
+font[size='7'] {
     font-size: 24px;
 }
 
@@ -60,26 +74,29 @@ span[font-size-style='24']{
 font color
  */
 
-
-.select-number a{
+.select-number a {
     padding: 8px 14px !important;
 }
-.select-number li{
+
+.select-number li {
 }
-.select-number{
+
+.select-number {
     min-width: 60px;
     padding: 0;
 }
 
-.font-color{
+.font-color {
     display: inline-block;
-    padding:0 16px;
+    padding: 0 16px;
     border-bottom: 1px solid #333333;
 }
-.btn-font-color{
+
+.btn-font-color {
     position: relative;
 }
-#color-line{
+
+#color-line {
     position: absolute;
     width: 28px;
     height: 4px;
@@ -87,76 +104,95 @@ font color
     bottom: 0;
     background-color: #333;
 }
-.color-cell{
-// cursor: pointer;
+
+.color-cell {
+/ / cursor: pointer;
 }
-.font-bg{
+
+.font-bg {
     display: inline-block;
     border: 1px solid #cccccc;
     padding: 3px;
     background-color: #FFFFFF;
 }
-.btn-font-bg{
+
+.btn-font-bg {
     padding: 5px 12px;
 }
-.color-panel{
+
+.color-panel {
     padding: 5px;
     text-align: center;
     cursor: pointer;
 }
-.dropdown-menu{
+
+.dropdown-menu {
     z-index: 9999;
 }
-.color-cell{
+
+.color-cell {
     display: inline-block;
     width: 20px;
     height: 20px;
     background-color: #333333;
     border: 1px solid #cccccc;
 }
-.color-cell[color="#658525"]{
+
+.color-cell[color="#658525"] {
     background-color: #658525;
 }
-.color-cell[color="#CFEE91"]{
+
+.color-cell[color="#CFEE91"] {
     background-color: #CFEE91;
 }
-.color-cell[color="#657DC4"]{
+
+.color-cell[color="#657DC4"] {
     background-color: #657DC4;
 }
-.color-cell[color="#66BFBF"]{
+
+.color-cell[color="#66BFBF"] {
     background-color: #66BFBF;
 }
-.color-cell[color="#FFCE00"]{
+
+.color-cell[color="#FFCE00"] {
     background-color: #FFCE00;
 }
-.color-cell[color="#FCFEFE"]{
+
+.color-cell[color="#FCFEFE"] {
     background-color: #FCFEFE;
 }
-.color-cell[color="#FFDE25"]{
+
+.color-cell[color="#FFDE25"] {
     background-color: #FFDE25;
 }
-.color-cell[color="#F76B8A"]{
+
+.color-cell[color="#F76B8A"] {
     background-color: #F76B8A;
 }
-.color-cell[color="#1989AC"]{
+
+.color-cell[color="#1989AC"] {
     background-color: #1989AC;
 }
-.color-cell[color="#155263"]{
+
+.color-cell[color="#155263"] {
     background-color: #155263;
 }
-.color-cell[color="#FF6F3C"]{
+
+.color-cell[color="#FF6F3C"] {
     background-color: #FF6F3C;
 }
-.color-cell[color="#088C6F"]{
+
+.color-cell[color="#088C6F"] {
     background-color: #088C6F;
 }
-.color-cell[color="#FFFFFF"]{
+
+.color-cell[color="#FFFFFF"] {
     background-color: #FFFFFF;
 }
-.color-panel a{
+
+.color-panel a {
     text-decoration: none;
 }
-
 
 /*stretch picture css*/
 .stretch-photo-container .left-bottom-focus {
@@ -180,6 +216,7 @@ font color
     left: -6px;
     top: -6px;
 }
+
 .stretch-photo-container .left-bottom-focus {
     display: inline-block;
     width: 10px;
@@ -201,7 +238,8 @@ font color
     right: -6px;
     top: -6px;
 }
-.stretch-photo-container .right-bottom-focus{
+
+.stretch-photo-container .right-bottom-focus {
     display: inline-block;
     width: 10px;
     height: 10px;
@@ -211,38 +249,103 @@ font color
     bottom: -6px;
     cursor: move;
 }
-.stretch-photo-container{
+
+.stretch-photo-container {
     display: inline-block;
     position: relative;
     margin: 0 1px;
     max-width: 100%;
 }
-.stretch-photo-container img{
+
+.stretch-photo-container img {
     max-width: 100%;
 }
 
 .stretch-photo-container img::selection {
-    background:none;
+    background: none;
 }
 
 .stretch-photo-container img::-moz-selection {
-    background:none;
+    background: none;
 }
 
 .stretch-photo-container img::-webkit-selection {
-    background:none;
+    background: none;
 }
 
 /*code */
-.code-body{
+.code-body {
     min-height: 1em;
     width: 100%;
     background-color: #333333;
     color: #FFFFFF;
 }
-.blockquote-body{
+
+.blockquote-body {
     background-color: #f7f7f7;
     color: #4d4d4c;
     border-left: 4px solid #2b542c;
     padding: 6px;
 }
+
+img.glyphicon {
+    vertical-align: baseline;
+}
+
+/*行距*/
+[p-line-height='1'] {
+    line-height: 1em;
+}
+
+[p-line-height='1.2'] {
+    line-height: 1.2em;
+}
+
+[p-line-height='1.5'] {
+    line-height: 1.5em;
+}
+
+[p-line-height='1.8'] {
+    line-height: 1.8em;
+}
+
+[p-line-height='2'] {
+    line-height: 2em;
+}
+
+[p-line-height='2.5'] {
+    line-height: 2.5em;
+}
+
+/*右键菜单*/
+.epMenu {
+    width: 120px;
+    position: fixed;
+    left: 0;
+    top: 0;
+    padding: 3px;
+    border-radius: 6px;
+    border: 1px solid #cc6666;
+    box-shadow: 0 2px 2px rgba(204, 197, 185, 0.5);
+    background-color: #FFFFFF;
+    color: #252422;
+    margin-bottom: 20px;
+}
+
+.epMenu a {
+    text-decoration: none;
+    display: block;
+    height: 25px;
+    width: 100%;
+    line-height: 25px;
+    padding-left: 15px;
+    font-size: 14px;
+    cursor: pointer;
+    color: #444;
+}
+
+.epMenu a:hover {
+    color: #f5a01b;
+    background: #f6f6f6;
+}
+

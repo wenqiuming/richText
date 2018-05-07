@@ -10,6 +10,8 @@ var position = {};
 
 var titleType = ["H1", "H2", "H3", "H4", "SECTION"];
 var titleName = ["H1", "H2", "H3", "H4", "正文"];
+var fontList=[1,2,3,4,5,6,7];
+var fontSizeList=[12,14,16,18,20,22,24];
 var breakActiveDiv;
 
 /*key down function */
@@ -38,32 +40,69 @@ $(window).keydown(function (e) {
     //         }
     //     }
     // }
-    if (e.keyCode===8&&lineDiv.childNodes.length>0&&lineDiv.innerHTML!="<br>"){
-        if (anchorNode===lineDiv||isLineStart(anchorNode,offset)){
-            savePos();
-            if (lineDiv!==rootNode.childNodes[0]){
-                var childNode=lineDiv.childNodes[0];
-                var len=lineDiv.previousSibling.childNodes.length;
-                var brs=lineDiv.previousSibling.querySelectorAll("br");
-                var i=0;
-                while (i<brs.length){
-                    brs[0].remove();
-                    i++;
-                    len--;
-                }
-                while (childNode!=null&&childNode!=undefined){
-                    lineDiv.previousSibling.appendChild(childNode);
-                    childNode=lineDiv.childNodes[0];
-                }
-                selection.collapse(position.parentNode,0);
-                lineDiv.remove();
-                e.preventDefault();
-            }
-        }
-    }
+    // if (e.keyCode===8&&lineDiv.childNodes.length>0&&lineDiv.innerHTML!="<br>"){
+    //     //在行首
+    //     if ((anchorNode===lineDiv&&offset===0)||isLineStart(anchorNode,offset)){
+    //         if (lineDiv===anchorNode){
+    //             position.parentNode=anchorNode.previousSibling;
+    //             position.offset=anchorNode.previousSibling.childNodes.length;
+    //         }else{
+    //             savePos();
+    //         }
+    //         if (lineDiv!==rootNode.childNodes[0]){
+    //             var childNode=lineDiv.childNodes[0];
+    //             var len=lineDiv.previousSibling.childNodes.length;
+    //             var brs=lineDiv.previousSibling.querySelectorAll("br");
+    //             var i=0;
+    //             while (i<brs.length){
+    //                 brs[0].remove();
+    //                 i++;
+    //                 len--;
+    //             }
+    //             while (childNode!=null&&childNode!=undefined){
+    //                 lineDiv.previousSibling.appendChild(childNode);
+    //                 childNode=lineDiv.childNodes[0];
+    //             }
+    //             if (lineDiv===anchorNode){
+    //                 selection.collapse(position.parentNode,position.offset);
+    //             }else{
+    //                 selection.collapse(position.parentNode,0);
+    //             }
+    //             lineDiv.remove();
+    //             e.preventDefault();
+    //         }
+    //     }
+    //
+    //     //处理删掉span前面的字符
+    //     if (anchorNode===lineDiv&&offset>0){
+    //         var removeNode=anchorNode.childNodes[offset-1];
+    //         var eleNode=findLastSingleEle(removeNode);
+    //         if (eleNode.nodeType===3){
+    //             if (eleNode.textContent.length>0){
+    //                 eleNode.textContent=eleNode.textContent.substr(0,eleNode.textContent.length-1);
+    //                 selection.collapse(eleNode,eleNode.textContent.length);
+    //             }else{
+    //                 eleNode.remove();
+    //             }
+    //         }else{
+    //             eleNode.remove();
+    //         }
+    //         e.preventDefault();
+    //     }
+    // }
 
 
 });
+
+function findLastSingleEle(node) {
+    if (node.nodeType===3){
+        return node;
+    }else if(node.childNodes.length===1&&node.childNodes[0].nodeType===1&&node.childNodes[0].childNodes.length===0) {
+        return node.childNodes[0];
+    }else{
+        return findElementNode(node.childNodes[node.childNodes.length-1]);
+    }
+}
 
 /**
  * key up function
@@ -73,10 +112,13 @@ $(window).keyup(function (e) {
     var anchorNode = selection.anchorNode;
     if (e.keyCode === 8) {
         if (rootNode.childNodes.length === 0) {
-            var lineNode = $("<div class='line-div'><br/></div>")[0];
+            var lineNode = $("<div class='line-div' p-line-height='{0}'><br/></div>".format($("#show-line-height").text()))[0];
             $(rootNode).append(lineNode);
             selection.collapse(lineNode, 0);
         }
+        //去掉遗留的文字样式
+      //  $('font[face="Glyphicons Halflings"]').removeAttr("face");
+
     }
     //最后空留一行
     if (rootNode.childNodes[rootNode.childNodes.length - 1].outerHTML != '<div class="line-div"><br></div>') {
@@ -103,55 +145,12 @@ $(window).keyup(function (e) {
                 selection.collapse(lineDiv.nextSibling, 0);
                 return;
             }
-
-            //解决emoji换行问题
-            if (anchorNode===lineDiv){
-                var brList=anchorNode.querySelectorAll("br");
-                if (brList.length>1){
-                    var newEmojiLineDiv = $("<div class='line-div'></div>")[0];
-                    var otherApp=brList[brList.length-1].nextSibling;
-                    while (otherApp!=null&&otherApp!=undefined){
-                        newEmojiLineDiv.appendChild(otherApp);
-                        otherApp=brList[brList.length-1].nextSibling;
-                    }
-                    brList[0].remove();
-                    brList[brList.length-1].remove();
-                    insertAfter(newEmojiLineDiv, lineDiv);
-                    selection.collapse(lineDiv.nextSibling, 0);
-                    return;
-                }
-            }
-
-            // var operLineBelow = findLineDivBelow(anchorNode);
-            // var lineBelow=buildLineBelowContainer(operLineBelow);
-            // if (lineBelow.childNodes.length>1){
-            //     if (lineBelow.childNodes[0].nodeType===1&&titleType.indexOf(lineBelow.childNodes[0].localName.toUpperCase())>=0&&lineBelow.childNodes[0].innerHTML=='<br>'){
-            //         lineBelow=lineBelow.childNodes[1];
-            //         var oldLineDiv = $("<div class='line-div'><br/></div>")[0];
-            //         insertBefore(oldLineDiv,lineDiv);
-            //     }
-            // }
-            // var newLineDiv = $("<div class='line-div'></div>")[0];
-            // if (lineBelow.innerHTML === '<br>') {
-            //     newLineDiv.innerHTML = lineBelow.innerHTML;
-            // } else {
-            //     newLineDiv.innerHTML = lineBelow.outerHTML;
-            // }
-            // insertAfter(newLineDiv, lineDiv);
-            // selection.collapse(lineDiv.nextSibling, 0);
-            // lineDiv.remove();
         }
-        //删除包含不止一个元素,且br开头,删除br
-        if (lineDiv.childNodes.length>1){
-            if (lineDiv.childNodes[0].nodeType===1&&lineDiv.childNodes[0].localName==='br'){
-                lineDiv.childNodes[0].remove();
-            }
+        //如果没有行距样式，默认给予目前选定的行距
+        var nowLine = findLineDiv(anchorNode);
+        if ($(nowLine).attr("p-line-height")===undefined){
+            $(nowLine).attr("p-line-height",$("#show-line-height").text());
         }
-
-    }
-    if ($(anchorNode).hasClass("div-img")) {
-        alert();
-        selection.collapse(anchorNode.previousSibling, 0);
     }
     //动态标题样式显示
     if (isRootNodeActive(e.target)) {
@@ -161,8 +160,8 @@ $(window).keyup(function (e) {
         dynamicModFontBackColorShow();
         dynamicModFontCssShow();
         dynamicModJustifyShow();
+        dynamicModLineHeightShow();
     }
-
 });
 
 
@@ -177,6 +176,7 @@ $(window).click(function (e) {
         dynamicModFontBackColorShow();
         dynamicModFontCssShow();
         dynamicModJustifyShow();
+        dynamicModLineHeightShow();
     }
     //表情框出现隐藏控制
     var node = document.getElementsByClassName("icon-popup");
@@ -187,7 +187,6 @@ $(window).click(function (e) {
             node[0].remove();
         }
     }
-
 });
 
 /**
@@ -398,64 +397,13 @@ function headerStyle(ele) {
 
 //设置字体大小
 //分2种情况,有选中文字,没选中文字
-
 function fontSizeStyle(size) {
     setFocus();
-    document.execCommand('fontSize', false, 2);
-    renderFontSize(size);
-    if (size === 0) {
-        $("#show_font_size").text("默认");
-        var selection = window.getSelection ? window.getSelection() : document.getSelection();
-        var anchorNode = selection.anchorNode;
-        var lineDiv = findLineDiv(anchorNode);
-    } else {
-        $("#show_font_size").text(size);
-    }
+    console.log(fontList[fontSizeList.indexOf(size)]);
+    document.execCommand('fontSize', false,fontList[fontSizeList.indexOf(size)]);
+    $("#show_font_size").text(size);
 }
 
-function renderFontSize(size) {
-    var fontEls = $("font[size]");
-    var fontElLength = fontEls.length;
-    var lastNewSpan;
-    if (fontEls.length !== 0) {
-        for (var i = 0; i < fontEls.length; i++) {
-            var fontEl = fontEls[i];
-            //移除child node样式
-            var fontChildNode = $(fontEl).find("span[font-size-style]");
-            for (var j = 0; j < fontChildNode.length; j++) {
-                $(fontChildNode[j]).removeAttr("font-size-style");
-            }
-            var fontSpan = $("<span font-size-style='{0}'></span>".format(size))[0];
-            if (size === 0) {
-                fontSpan = $("<span></span>")[0];
-            }
-            mvChildNode(fontSpan, fontEl);
-            insertAfter(fontSpan, fontEl);
-            lastNewSpan = fontSpan;
-        }
-        for (var k = 0; k < fontElLength; k++) {
-            $(fontEls)[k].remove();
-        }
-        if (lastNewSpan !== null) {
-            var selection = window.getSelection ? window.getSelection() : document.getSelection();
-            selection.collapse(lastNewSpan, lastNewSpan.childNodes.length);
-        }
-    } else {
-        var selection = window.getSelection ? window.getSelection() : document.getSelection();
-        var anchorNode = selection.anchorNode;
-        var newSpan = $("<span font-size-style='{0}'>&zwnj;</span>".format(size))[0];
-        if (size === 0) {
-            newSpan = $("<span>&zwnj;</span>")[0];
-        }
-        insertAfter(newSpan, anchorNode);
-        selection.collapse(newSpan, 1);
-    }
-    //移除父节点样式
-    var pnode = lastNewSpan.parentNode;
-    if ($(pnode).attr("font-size-style") !== undefined && pnode.childNodes.length === 1) {
-        $(pnode).removeAttr("font-size-style");
-    }
-}
 
 /**
  * 获取子节点位于父节点的下标
@@ -497,11 +445,6 @@ function savePos() {
 
 function restorePos() {
     var selection = window.getSelection ? window.getSelection() : document.getSelection();
-    // if (position.parentNode.nodeType===1){
-    //     position.offset=position.offset>position.parentNode.childNodes.length?position.parentNode.childNodes.length: position.offset;
-    // }else{
-    //     position.offset=position.offset>position.parentNode.textContent.length?position.parentNode.textContent.length: position.offset;
-    // }
     selection.collapse(position.parentNode, position.offset);
 }
 
@@ -556,17 +499,17 @@ function dynamicModFontShow() {
     var selection = window.getSelection ? window.getSelection() : document.getSelection();
     if (selection.isCollapsed) {
         var anchorNode = selection.anchorNode;
-        var selfSize = $(anchorNode).attr("font-size-style");
+        var selfSize = $(anchorNode).attr("size");
         if (selfSize !== undefined) {
-            $("#show_font_size").text(selfSize);
+            $("#show_font_size").text(fontSizeList[fontList.indexOf(selfSize)]);
             return;
         }
-        var parents = $(anchorNode).parents("span[font-size-style]");
+        var parents = $(anchorNode).parents("font[size]");
         if (parents.length === 0) {
-            $("#show_font_size").text("默认");
+            $("#show_font_size").text("14");
         } else {
-            var size = $(parents[0]).attr("font-size-style");
-            $("#show_font_size").text(size);
+            var size = $(parents[0]).attr("size");
+            $("#show_font_size").text(fontSizeList[fontList.indexOf(selfSize)]);
         }
     }
 }
@@ -711,6 +654,20 @@ function dynamicModJustifyShow() {
     var justifyDivCss = $(lineDiv).css("text-align");
     selectAlign(justifyDivCss);
 }
+/**
+ * 动态显示line-height类型
+ */
+function dynamicModLineHeightShow() {
+    var selection = window.getSelection ? window.getSelection() : document.getSelection();
+    var anchorNode = selection.anchorNode;
+    var nowLine=findLineDiv(anchorNode);
+    var lineNum=$(nowLine).attr("p-line-height");
+    if (lineNum===null||lineNum===undefined){
+        $("#show-line-height").html("1");
+    }else{
+        $("#show-line-height").html(lineNum);
+    }
+}
 
 
 /**
@@ -783,6 +740,16 @@ function fontStyle(type) {
         $btn.addClass("font-style-active");
     }
 }
+//横线
+function hrStyle(style) {
+    var hrCode="<div class='line-div' contenteditable='false'><hr/></div>";
+    var underLine="<div class='line-div'><br></div>";
+    var selection = window.getSelection ? window.getSelection() : document.getSelection();
+    var anchorNode = selection.anchorNode;
+    var nowLine = findLineDiv(anchorNode);
+    insertAfter($(hrCode)[0],nowLine);
+    insertAfter($(underLine)[0],nowLine.nextElementSibling);
+}
 
 //清除样式
 function clearFontStyle() {
@@ -790,6 +757,16 @@ function clearFontStyle() {
     document.execCommand("RemoveFormat", false, null);
 }
 
+function lineHeightStyle(num) {
+    savePos();
+    var selection = window.getSelection ? window.getSelection() : document.getSelection();
+    var anchorNode = selection.anchorNode;
+    var nowLine = findLineDiv(anchorNode);
+    $(nowLine).attr("p-line-height",num);
+    $("#show-line-height").html(num);
+    setFocus();
+    restorePos();
+}
 
 //对光标插入位置或所选内容进行文字居中/左对齐/右对齐
 function justifyAlign(asign) {
@@ -905,28 +882,23 @@ $(function () {
 //表情
 function clickIcon(val) {
     setFocus();
-    var emoji = "<span class='" + val + "' contenteditable='false'></span>";
+    var emoji = "<img src='' class='" + val + "'/>";
     var selection = window.getSelection ? window.getSelection() : document.getSelection();
-    //取得光标所在的容器节点
-    // var anchorNode = selection.anchorNode;
-    // var operNode=findElementNode(anchorNode);
-    // $(operNode).append($(emoji)[0]);
-    // selection.collapse(operNode,operNode.childNodes.length);
     var lineCount=rootNode.childNodes.length;
-    savePos();
+    //savePos();
     document.execCommand("insertHtml",false,emoji);
-    var afterLineCount=rootNode.childNodes.length;
-    if(afterLineCount>lineCount){
-        var anchorNode = selection.anchorNode;
-        var afterLineDiv=findLineDiv(anchorNode);
-        var otherApp=afterLineDiv.childNodes[0];
-        while (otherApp!=null&&otherApp!=undefined){
-            afterLineDiv.previousSibling.appendChild(otherApp);
-            otherApp=afterLineDiv.childNodes[0];
-        }
-        afterLineDiv.remove();
-        selection.collapse(position.parentNode,0);
-    }
+    //var afterLineCount=rootNode.childNodes.length;
+    // if(afterLineCount>lineCount){
+    //     var anchorNode = selection.anchorNode;
+    //     var afterLineDiv=findLineDiv(anchorNode);
+    //     var otherApp=afterLineDiv.childNodes[0];
+    //     while (otherApp!=null&&otherApp!=undefined){
+    //         afterLineDiv.previousSibling.appendChild(otherApp);
+    //         otherApp=afterLineDiv.childNodes[0];
+    //     }
+    //     afterLineDiv.remove();
+    //     selection.collapse(position.parentNode,0);
+    // }
 }
 
 /**

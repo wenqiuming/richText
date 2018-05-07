@@ -31,9 +31,8 @@
         <div class="btn-group">
             <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" title="字号"
                     tooltip="true" style="width: 58px">
-                <b id="show_font_size">默认</b>&nbsp; <span class="caret"></span></button>
+                <b id="show_font_size">14</b>&nbsp; <span class="caret"></span></button>
             <ul class="dropdown-menu  select-number" role="menu">
-                <li class="font-pick"><a href="javascript:fontSizeStyle(0)">默认</a></li>
                 <li class="font-pick"><a href="javascript:fontSizeStyle(12)">12</a></li>
                 <li class="font-pick"><a href="javascript:fontSizeStyle(14)">14</a></li>
                 <li class="font-pick"><a href="javascript:fontSizeStyle(16)">16</a></li>
@@ -143,6 +142,7 @@
             <button type="button" class="btn btn-default" id="btn-italic" onclick="fontStyle('italic')"><i class="fa fa-italic" aria-hidden="true"></i></button>
             <button type="button" class="btn btn-default" id="btn-underline" onclick="fontStyle('underLine')"><i class="fa fa-underline" aria-hidden="true"></i></button>
             <button type="button" class="btn btn-default" id="btn-strikethrough" onclick="fontStyle('strikeThrough')"><i class="fa fa-strikethrough" aria-hidden="true"></i></button>
+            <button type="button" class="btn btn-default" id="btn-hr" onclick="hrStyle('strikeThrough')"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></button>
             <button type="button" class="btn btn-default" id="btn-clearFontStyle" onclick="clearFontStyle()"><i class="fa fa-eraser" aria-hidden="true"></i></button>
 
             <!--对齐-->
@@ -152,6 +152,19 @@
                 <i class="fa fa-align-center" aria-hidden="true"></i></button>
             <button type="button" class="btn btn-default text-align" onclick="justifyAlign('right')" id="btn-align-right"><i
                     class="fa fa-align-right" aria-hidden="true"></i></button>
+            <!--行距-->
+            <div class="btn-group">
+                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" title="字号"
+                        tooltip="true" style="width: 58px">
+                    <b id="show-line-height">1</b>&nbsp; <span class="caret"></span></button>
+                <ul class="dropdown-menu  select-number" role="menu">
+                    <li class="font-pick"><a href="javascript:lineHeightStyle(1)">1</a></li>
+                    <li class="font-pick"><a href="javascript:lineHeightStyle(1.2)">1.2</a></li>
+                    <li class="font-pick"><a href="javascript:lineHeightStyle(1.5)">1.5</a></li>
+                    <li class="font-pick"><a href="javascript:lineHeightStyle(1.8)">1.8</a></li>
+                    <li class="font-pick"><a href="javascript:lineHeightStyle(2)">2</a></li>
+                </ul>
+            </div>
             <!--序列-->
             <button type="button" class="btn btn-default" onclick="insertList(true)"><i class="fa fa-list-ol"
                                                                                         aria-hidden="true"></i></button>
@@ -161,13 +174,13 @@
             <button type="button" class="btn btn-default"><i class="fa fa-th" aria-hidden="true"></i></button>
             <button type="button" class="btn btn-default" onclick="insertCodeStyle()"><i class="fa fa-code" aria-hidden="true"></i></button>
             <button type="button" class="btn btn-default"><i class="fa fa-sitemap" aria-hidden="true"></i></button>
-            <button type="button" class="btn btn-default" onclick="insertBlockquoteStyle()"><i class="fa fa-chain-broken" aria-hidden="true"></i></button>
+            <button type="button" class="btn btn-default" onclick="insertBlockquoteStyle()"><i class="fa fa-tag" aria-hidden="true"></i></button>
             <button type="button" class="btn btn-default" id="txt_boostrap_icon"><i class="fa fa-smile-o" aria-hidden="true"></i></button>
         </div>
     </div>
 </div>
 <div class="meditor-body" contenteditable="true">
-    <div class="line-div">AAA<span><b>absd</b>323</span></div>
+    <div class="line-div">AAA<span><b>absd</b>323</span><img class="glyphicon glyphicon-asterisk" src="" style="vertical-align: baseline"/></div>
 </div>
 </body>
 <script src="../../static/js/jquery-2.0.3.js"></script>
@@ -176,4 +189,5 @@
 <script src="../../static/js/uploadPic.js"></script>
 <script src="../../static/js/prettify.js"></script>
 <script src="../../static/js/iconPicker.js"></script>
+<script src="../../static/js/mouse-click-menu.js"></script>
 </html>

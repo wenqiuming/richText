@@ -50,9 +50,14 @@ $(window).keydown(function (e) {
         var rootNode = $("#rich-body")[0];
         var selection = window.getSelection ? window.getSelection() : document.getSelection();
         var anchorNode = selection.anchorNode;
+        console.log(selection);
         var rootBelow;
         if (rootNode === anchorNode) {
-            rootBelow = anchorNode.childNodes[selection.anchorOffset];
+            if (rootNode.childNodes.length<selection.anchorOffset+1){
+                rootBelow = anchorNode.childNodes[selection.anchorOffset];
+            }else{
+                rootBelow = anchorNode.childNodes[selection.anchorOffset-1];
+            }
         } else {
             rootBelow = findRootBelow(anchorNode);
         }
@@ -62,14 +67,16 @@ $(window).keydown(function (e) {
             $(lineNode).text(rootBelow.textContent);
         } else if (rootBelow.localName==("div")){
            lineNode=$(rootBelow.outerHTML)[0];
-        }else{
-            $(lineNode).html(rootBelow.outerHTML);
+        }else if (rootBelow.localName==("br")){
+            $(lineNode).html("&zwnj;");
         }
 
         var brNode = $("<br/>")[0];
         rootNode.insertBefore(lineNode, rootBelow);
         rootNode.insertBefore(brNode, rootBelow);
         rootBelow.remove();
+        //设置光标
+        //setTextTailSelection();
     }
 });
 
