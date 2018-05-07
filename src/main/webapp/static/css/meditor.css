@@ -319,12 +319,12 @@ img.glyphicon {
 
 /*右键菜单*/
 .epMenu {
-    width: 120px;
+    width: 160px;
     position: fixed;
     left: 0;
     top: 0;
     padding: 3px;
-    border-radius: 6px;
+    border-radius: 3px;
     border: 1px solid #cc6666;
     box-shadow: 0 2px 2px rgba(204, 197, 185, 0.5);
     background-color: #FFFFFF;

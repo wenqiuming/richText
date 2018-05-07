@@ -21,12 +21,14 @@ var epMenu = {
         $(".epMenu").remove();
     }
 };
+var evt;
 
 function sayhello() {
     epMenu.destory();
 }
+
 function del() {
-    alert();
+    console.log(evt.target);
     epMenu.destory();
 }
 
@@ -38,9 +40,12 @@ document.onmousedown = function (e) {
     var menuNode = document.getElementById('epMenu');
     if (e.button === 2) {
         document.oncontextmenu = hideSysMenu;//屏蔽鼠标右键
-        var evt = window.event || arguments[0];
-        var rightedge = evt.clientX;
-        var bottomedge = evt.clientY;
-        epMenu.create({left: rightedge, top: bottomedge}, [{name: '删除', 'action': del}]);
+        evt = window.event || arguments[0];
+        var targetEle = evt.target;
+        if ($(targetEle).parents("pre").length>0 || (targetEle.nodeType === 1 && targetEle.localName === 'pre')) {
+            var rightedge = evt.clientX;
+            var bottomedge = evt.clientY;
+            epMenu.create({left: rightedge, top: bottomedge}, [{name: '删除', 'action': del}]);
+        }
     }
 }
