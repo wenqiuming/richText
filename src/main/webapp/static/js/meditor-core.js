@@ -16,15 +16,19 @@ var breakActiveDiv;
 
 /*key down function */
 $(window).keydown(function (e) {
-    // console.log(e.keyCode);
     var selection = window.getSelection ? window.getSelection() : document.getSelection();
     var anchorNode = selection.anchorNode;
+    //处理第一行
+    var nowLine=findLineDiv(anchorNode,selection);
+    if (e.keyCode===8&&nowLine===$(rootNode).children("div.line-div")[0]&&nowLine.innerHTML==='<br>'){
+        nowLine.remove();
+    }
     //判断是否行内元素
     var existLine = $(e.target).parents(".line-div");
     if (existLine.length === 0 && !$(e.target).hasClass("line-div")) {
         return;
     }
-    breakActiveDiv = findLineDiv(anchorNode);
+    breakActiveDiv = findLineDiv(anchorNode,selection);
 });
 
 
@@ -34,6 +38,8 @@ $(window).keydown(function (e) {
 $(window).keyup(function (e) {
     var selection = window.getSelection ? window.getSelection() : document.getSelection();
     var anchorNode = selection.anchorNode;
+    //最后空留一行
+   dealLastLine();
     //判断是否行内元素
     var existLine = $(anchorNode).parents(".line-div");
     if (existLine.length === 0 && !$(anchorNode).hasClass("line-div")) {
@@ -45,11 +51,18 @@ $(window).keyup(function (e) {
             $(rootNode).append(lineNode);
             selection.collapse(lineNode, 0);
         }
-    }
-    //最后空留一行
-    if (rootNode.childNodes[rootNode.childNodes.length - 1].outerHTML != '<div class="line-div"><br></div>') {
-        var lastLineNode = $("<div class='line-div'><br/></div>")[0];
-        $(rootNode).append(lastLineNode);
+        //处理code 代码块
+        if ($(anchorNode).hasClass("prettyprint")){
+            $(anchorNode).html("<div><br/></div>");
+        }else if ($(anchorNode).parents(".prettyprint").length>0&&$($(anchorNode).parents(".prettyprint")[0]).children("div").length===0){
+            var preNode=$(anchorNode).parents(".prettyprint")[0];
+            savePos();
+            var container=$("<div></div>")[0];
+            mvChildNode(container,preNode);
+            preNode.appendChild(container);
+            restorePos();
+        }
+
     }
     //enter 换行
     if (e.keyCode === 13) {
@@ -61,7 +74,7 @@ $(window).keyup(function (e) {
         if (findLineDivBelow(anchorNode) !== null && findLineDivBelow(anchorNode).nodeType === 1 && findLineDivBelow(anchorNode).localName === 'pre') {
             return;
         }
-        var lineDiv = findLineDiv(anchorNode);
+        var lineDiv = findLineDiv(anchorNode,selection);
         if (breakActiveDiv === lineDiv) {
             //一个line-div出现行元素大于1,移除该line-div中的后一个,新增line-div,内容为后一个行元素
             if (lineDiv.childNodes.length > 1 && lineDiv.childNodes[0].nodeType === 1 && titleType.indexOf(lineDiv.childNodes[0].localName.toUpperCase()) >= 0) {
@@ -73,13 +86,13 @@ $(window).keyup(function (e) {
             }
         }
         //如果没有行距样式，默认给予目前选定的行距
-        var nowLine = findLineDiv(anchorNode);
+        var nowLine = findLineDiv(anchorNode,selection);
         if ($(nowLine).attr("p-line-height") === undefined) {
             $(nowLine).attr("p-line-height", $("#show-line-height").text());
         }
     }
     //动态标题样式显示
-    if (isRootNodeActive(e.target)) {
+    if (isRootNodeActive(e.target)&&anchorNode!==null&&anchorNode!==undefined) {
         dynamicModHeaderShow();
         dynamicModFontShow();
         dynamicModFontColorShow();
@@ -111,7 +124,7 @@ $(window).click(function (e) {
     if (lineDiv.length === 0&& !$(e.target).hasClass("line-div")) {
         return;
     }
-    if (isRootNodeActive(e.target)) {
+    if (isRootNodeActive(e.target)&&anchorNode!==null&&anchorNode!==undefined) {
         dynamicModHeaderShow();
         dynamicModFontShow();
         dynamicModFontColorShow();
@@ -120,6 +133,8 @@ $(window).click(function (e) {
         dynamicModJustifyShow();
         dynamicModLineHeightShow();
     }
+    //最后一行
+    dealLastLine();
 });
 
 /**
@@ -140,11 +155,17 @@ function findRootBelow(node) {
  * @param node
  * @returns {*}
  */
-function findLineDiv(node) {
+function findLineDiv(node,selection) {
+    if (node===null||node===undefined){
+        return null;
+    }
+    if (node===rootNode){
+        return node.childNodes[selection.anchorOffset];
+    }
     if ($(node).hasClass("line-div")) {
         return node;
     } else {
-        return findLineDiv(node.parentNode);
+        return findLineDiv(node.parentNode,selection);
     }
 }
 
@@ -154,6 +175,9 @@ function findLineDiv(node) {
  * @returns {*}
  */
 function findLineDivBelow(node) {
+    if (node===null){
+        return null;
+    }
     if ($(node).hasClass("line-div")) {
         if (node.childNodes.length === 0) {
             return null;
@@ -298,7 +322,7 @@ function headerStyle(ele) {
     setFocus();
     var selection = window.getSelection ? window.getSelection() : document.getSelection();
     var anchorNode = selection.anchorNode;
-    var lineDiv = findLineDiv(anchorNode);
+    var lineDiv = findLineDiv(anchorNode,selection);
     savePos();
     var tag = $("<{0}>".format(ele))[0];
     var lineBelow = findLineDivBelow(anchorNode);
@@ -332,7 +356,6 @@ function headerStyle(ele) {
 //分2种情况,有选中文字,没选中文字
 function fontSizeStyle(size) {
     setFocus();
-    console.log(fontList[fontSizeList.indexOf(size)]);
     document.execCommand('fontSize', false, fontList[fontSizeList.indexOf(size)]);
     $("#show_font_size").text(size);
 }
@@ -569,23 +592,13 @@ function dynamicModFontCssShow() {
 function dynamicModJustifyShow() {
     var selection = window.getSelection ? window.getSelection() : document.getSelection();
     var anchorNode = selection.anchorNode;
-    if (anchorNode.parentNode.nodeType === 1) {
+    if (anchorNode.nodeType === 1) {
+        var justifyCss = $(anchorNode).css("text-align");
+        selectAlign(justifyCss);
+    }else{
         var pjustifyCss = $(anchorNode.parentNode).css("text-align");
         selectAlign(pjustifyCss);
-        return;
     }
-    var lineBelow = findLineDivBelow(anchorNode);
-    if (lineBelow !== null && lineBelow.nodeType === 1) {
-        var titleIndex = titleType.indexOf(lineBelow.localName.toUpperCase());
-        if (titleIndex >= 0 || lineBelow.localName === 'div') {
-            var justifyCss = $(lineBelow).css("text-align");
-            selectAlign(justifyCss);
-            return;
-        }
-    }
-    var lineDiv = findLineDiv(anchorNode);
-    var justifyDivCss = $(lineDiv).css("text-align");
-    selectAlign(justifyDivCss);
 }
 /**
  * 动态显示line-height类型
@@ -593,7 +606,7 @@ function dynamicModJustifyShow() {
 function dynamicModLineHeightShow() {
     var selection = window.getSelection ? window.getSelection() : document.getSelection();
     var anchorNode = selection.anchorNode;
-    var nowLine = findLineDiv(anchorNode);
+    var nowLine = findLineDiv(anchorNode,selection);
     var lineNum = $(nowLine).attr("p-line-height");
     if (lineNum === null || lineNum === undefined) {
         $("#show-line-height").html("1.4");
@@ -645,7 +658,7 @@ function removeAllChildNode(targetEl) {
     }
 }
 
-//前景色
+
 
 //设置字体前景色
 function fontColorStyle(color) {
@@ -675,11 +688,12 @@ function fontStyle(type) {
 }
 //横线
 function hrStyle(num) {
+    setFocus();
     var hrCode = "<div class='line-div' contenteditable='false'><hr class='line-hr hr-{0}'/></div>".format(num);
     var underLine = "<div class='line-div'><br ></div>";
     var selection = window.getSelection ? window.getSelection() : document.getSelection();
     var anchorNode = selection.anchorNode;
-    var nowLine = findLineDiv(anchorNode);
+    var nowLine = findLineDiv(anchorNode,selection);
     insertAfter($(hrCode)[0], nowLine);
     insertAfter($(underLine)[0], nowLine.nextElementSibling);
 }
@@ -691,10 +705,11 @@ function clearFontStyle() {
 }
 
 function lineHeightStyle(num) {
+    setFocus();
     savePos();
     var selection = window.getSelection ? window.getSelection() : document.getSelection();
     var anchorNode = selection.anchorNode;
-    var nowLine = findLineDiv(anchorNode);
+    var nowLine = findLineDiv(anchorNode,selection);
     $(nowLine).attr("p-line-height", num);
     $("#show-line-height").html(num);
     setFocus();
@@ -711,6 +726,7 @@ function justifyAlign(asign) {
 //段落
 //在插入点或选中文字上创建一个有序列表
 function insertList(isOrder) {
+    setFocus();
     if (isOrder) {
         document.execCommand("insertOrderedList", false, null);
     } else {
@@ -730,9 +746,10 @@ function selectAlign(align) {
  * 插入代码块
  */
 function insertCodeStyle() {
+    setFocus();
     var selection = window.getSelection ? window.getSelection() : document.getSelection();
     var anchorNode = selection.anchorNode;
-    var nowLine = findLineDiv(anchorNode);
+    var nowLine = findLineDiv(anchorNode,selection);
     var selectiveHtml = getRangeHtml();
     if ($.trim(selectiveHtml) === '') {
         selectiveHtml = "<div>&zwnj;</div>";
@@ -740,13 +757,17 @@ function insertCodeStyle() {
     var codeStr = "<pre class='prettyprint' contenteditable='true'>" + selectiveHtml + "</pre>";
     var codeLineDiv = $("<div class='line-div'>{0}</div>".format(codeStr))[0];
     insertAfter(codeLineDiv, nowLine);
-    var newLineDiv = $("<div class='line-div'><br></div>")[0];
-    insertAfter(newLineDiv, nowLine.nextSibling);
+    //如果空行,删除
+    if (nowLine.innerHTML===undefined||nowLine.innerHTML===null||nowLine.innerHTML==="<br>"||$.trim(nowLine.innerHTML.replace(/&nbsp;/g,""))===""){
+        nowLine.remove();
+    }
     $(".prettyprint").removeClass("prettyprinted");
+    //重新渲染code style
     prettyPrint();
     selection.collapse(codeLineDiv, 1);
+    dealLastLine();
     //添加右键删除功能
-    $("pre").parent(".line-div").smartMenu(codeSettings);
+    $("pre").parent(".line-div").smartMenu(codeSettings,{"name":"code"});
 }
 
 /**
@@ -791,7 +812,7 @@ function insertBlockquoteStyle() {
     setFocus();
     var selection = window.getSelection ? window.getSelection() : document.getSelection();
     var anchorNode = selection.anchorNode;
-    var nowLine = findLineDiv(anchorNode);
+    var nowLine = findLineDiv(anchorNode,selection);
     var selectiveHtml = getRangeHtml();
     if ($.trim(selectiveHtml) === '') {
         selectiveHtml = "<div>&zwnj;</div>";
@@ -803,7 +824,11 @@ function insertBlockquoteStyle() {
     insertAfter(newLineDiv, nowLine.nextSibling);
     selection.collapse(codeLineDiv, 1);
     //添加右键删除功能
-    $(".blockquote-body").parent(".line-div").smartMenu(codeSettings);
+    $(".blockquote-body").parent(".line-div").smartMenu(blockSettings,{"name":"block"});
+    //如果空行,删除
+    if (nowLine.innerHTML===undefined||nowLine.innerHTML===null||nowLine.innerHTML==="<br>"||$.trim(nowLine.innerHTML.replace(/&nbsp;/g,""))===""){
+        nowLine.remove();
+    }
 }
 
 
@@ -836,13 +861,12 @@ function findElementNode(anchorNode) {
     }
 }
 
-
-var codeSettings = [
+var blockSettings = [
     [{
         text: "删除",
         func: function () {
             var selection = window.getSelection ? window.getSelection() : document.getSelection();
-            var p = findLineDiv(selection.anchorNode);
+            var p = findLineDiv(selection.anchorNode,selection);
             p.remove();
             dealLastLine();
         }
@@ -851,39 +875,107 @@ var codeSettings = [
         func: function () {
             document.execCommand('copy');
         }
+    }, {
+        text: "下移一行",
+        func: function () {
+            var selection = window.getSelection ? window.getSelection() : document.getSelection();
+            var p = findLineDiv(selection.anchorNode,selection);
+            var nline=$("<div class='line-div'><br/></div>")[0];
+            insertBefore(nline,p);
+        }
+    }]
+];
+
+var codeSettings = [
+    [{
+        text: "删除",
+        func: function () {
+            var selection = window.getSelection ? window.getSelection() : document.getSelection();
+            var p = findLineDiv(selection.anchorNode,selection);
+            p.remove();
+            dealLastLine();
+        }
+    }, {
+        text: "复制内容",
+        func: function () {
+            document.execCommand('copy');
+        }
+    }, {
+        text: "下移一行",
+        func: function () {
+            var selection = window.getSelection ? window.getSelection() : document.getSelection();
+            var p = findLineDiv(selection.anchorNode,selection);
+            var nline=$("<div class='line-div'><br/></div>")[0];
+            insertBefore(nline,p);
+        }
+    }, {
+        text: "代码高亮",
+        func: function () {
+            $(".prettyprint").removeClass("prettyprinted");
+            prettyPrint();
+        }
     }]
 ];
 var imgSettings = [
     [{
         text: "删除",
         func: function () {
-            var p = $(".stretch-photo-container.active").parents(".line-div")[0];
+           // var p = $(".stretch-photo-container.active").parents(".line-div")[0];
+            var p=$(smartMenuTarget).parents(".line-div")[0];
             p.remove();
             dealLastLine();
         }
     }, {
         text: "居左",
         func: function () {
-            var p = $(".stretch-photo-container.active").parents(".line-div")[0];
+            //var p = $(".stretch-photo-container.active").parents(".line-div")[0];
+            var p=$(smartMenuTarget).parents(".line-div")[0];
             $(p).css("text-align", "left");
         }
     }, {
         text: "居中",
         func: function () {
-            var p = $(".stretch-photo-container.active").parents(".line-div")[0];
+           //var p = $(".stretch-photo-container.active").parents(".line-div")[0];
+            var p=$(smartMenuTarget).parents(".line-div")[0];
             $(p).css("text-align", "center");
         }
     }, {
         text: "居右",
         func: function () {
-            var p = $(".stretch-photo-container.active").parents(".line-div")[0];
+            //var p = $(".stretch-photo-container.active").parents(".line-div")[0];
+            var p=$(smartMenuTarget).parents(".line-div")[0];
             $(p).css("text-align", "right");
+        }
+    }, {
+        text: "下移一行",
+        func: function () {
+            //var p = $(".stretch-photo-container.active").parents(".line-div")[0];
+            var p=$(smartMenuTarget).parents(".line-div")[0];
+            var nline=$("<div class='line-div'><br/></div>")[0];
+            insertBefore(nline,p);
+        }
+    }, {
+        text: "宽度填满",
+        func: function () {
+            //var p = $(".stretch-photo-container.active").parents(".line-div")[0];
+            var p=$(smartMenuTarget).parents(".line-div")[0];
+            $(p).find("img").css("width", "100%");
+            $(p).find(".stretch-photo-container").css("width", "100%");
+        }
+    }, {
+        text: "原始尺寸",
+        func: function () {
+           //var p = $(".stretch-photo-container.active").parents(".line-div")[0];
+            var p=$(smartMenuTarget).parents(".line-div")[0];
+            $(p).find("img").css("width", "auto");
+            $(p).find("img").css("height", "auto");
+            $(p).find(".stretch-photo-container").css("width", "auto");
         }
     }]
 ];
 function dealLastLine() {
     //最后空留一行
-    if (rootNode.childNodes[rootNode.childNodes.length - 1].outerHTML != '<div class="line-div"><br></div>') {
+    if (rootNode.childNodes.length===0||rootNode.childNodes[rootNode.childNodes.length - 1].outerHTML != '<div class="line-div"><br></div>') {
         var lastLineNode = $("<div class='line-div'><br/></div>")[0];
         $(rootNode).append(lastLineNode);
     }

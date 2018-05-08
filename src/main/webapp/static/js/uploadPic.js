@@ -9,12 +9,20 @@ document.addEventListener('paste', function (event) {
             var text = clipboardData.getData('text/plain');
             if (text !== "") {
                 document.execCommand('insertText', false, text);
-                    //如果代码粘贴,更新代码格式显示
-                   var activeEle=event.target;
-                   if($(activeEle).parents(".prettyprint").length>0||activeEle.tagName==='BR'){
-                       $(".prettyprint").removeClass("prettyprinted");
-                       prettyPrint();
-                   }
+                //如果代码粘贴,更新代码格式显示
+                //代码高亮
+                var selection = window.getSelection ? window.getSelection() : document.getSelection();
+                var anchorNode = selection.anchorNode;
+                if ($(anchorNode).hasClass(".prettyprint")||$(anchorNode).parents(".prettyprint").length>0){
+                    var prettyNode=$(anchorNode).hasClass(".prettyprint")?anchorNode:$(anchorNode).parents(".prettyprint")[0];
+                    var c=$("<div></div>")[0];
+                    c.innerText=prettyNode.innerText;
+                    $(prettyNode).html(c.outerHTML);
+                    $(prettyNode).removeClass("prettyprinted");
+                    //prettyPrintOne(prettyNode);
+                    prettyPrint();
+                    selection.collapse(prettyNode,1);
+                }
                 return;
             }
             if (clipboardData.items) {
@@ -46,12 +54,12 @@ document.addEventListener('paste', function (event) {
                             var outerHtml = createStretchPic(base64_str).outerHTML;
                             var selection = window.getSelection ? window.getSelection() : document.getSelection();
                             var anchorNode = selection.anchorNode;
-                            var nowLine=findLineDiv(anchorNode);
-                            var imgLine=$("<div class='line-div'></div>")[0];
+                            var nowLine = findLineDiv(anchorNode, selection);
+                            var imgLine = $("<div class='line-div'></div>")[0];
                             $(imgLine).append(outerHtml);
-                            insertAfter(imgLine,nowLine);
-                            console.log("replace",nowLine.innerHTML.replace(/&nbsp;/g,""));
-                            if (nowLine.innerHTML==="<br>"||$.trim(nowLine.innerHTML.replace(/&nbsp;/g,""))===""){
+                            insertAfter(imgLine, nowLine);
+                            //如果空行,删除
+                            if (nowLine.innerHTML===undefined||nowLine.innerHTML===null||nowLine.innerHTML==="<br>"||$.trim(nowLine.innerHTML.replace(/&nbsp;/g,""))===""){
                                 nowLine.remove();
                             }
                             $(".stretch-photo-container .focus-cell").css("display", "none");
@@ -63,7 +71,7 @@ document.addEventListener('paste', function (event) {
                                 active_StretchPic_hei = $(".stretch-photo-container.active img").height();
                             });
                             //添加右键删除功能
-                            $(".stretch-photo-container").parent(".line-div").smartMenu(imgSettings);
+                            $(".stretch-photo-container").parent(".line-div").smartMenu(imgSettings, {"name": "img"});
                             dealLastLine();
                             //可以在这里写上传逻辑 直接将base64编码的字符串上传（可以尝试传入blob对象，看看后台程序能否解析）
                         };//reader.onload
@@ -164,7 +172,7 @@ function createStretchPic(srcRes) {
     $(imgContainer).append(leftBottom);
     $(imgContainer).append(rightTop);
     $(imgContainer).append(rightBottom);
-    $(imgContainer).attr("contenteditable","false");
+    $(imgContainer).attr("contenteditable", "false");
     var img = document.createElement('img');
     img.src = srcRes;
     $(imgContainer).append(img);
@@ -179,7 +187,7 @@ $(window).click(function (e) {
         isStretchPic = true;
         $($(tarEle)).addClass("active");
     }
-    if ($(tarEle).parents(".stretch-photo-container").length>0) {
+    if ($(tarEle).parents(".stretch-photo-container").length > 0) {
         isStretchPic = true;
         $($(tarEle).parents(".stretch-photo-container")[0]).addClass("active");
     }
@@ -211,7 +219,7 @@ $(window).mousemove(function (e) {
     }
     var diffY = e.clientY - active_StretchPic_orginalY;
     var diffX = e.clientX - active_StretchPic_orginalX;
-    //$(".stretch-photo-container.active").width(active_StretchPic_wid+diffX);
+    $(".stretch-photo-container.active").css("width", "auto");
     $(".stretch-photo-container.active img").width(active_StretchPic_wid + diffX);
     if ($(".stretch-photo-container.active img").width() < 40) {
         $(".stretch-photo-container.active img").width(40);

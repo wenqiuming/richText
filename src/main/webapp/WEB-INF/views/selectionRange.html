@@ -41,7 +41,7 @@
             } else {
                 createNewLine(selection, offset);
                 remainContent(selection, offset);
-                var operNode = findLineDiv(anchorNode);
+                var operNode = findLineDiv(anchorNode,selection);
                 console.log(selection);
                 if ($(anchorNode).hasClass("line-div") &&offset===0) {
                     console.log("do nothing");

@@ -9,7 +9,7 @@
  * 2011-10-10 v1.2  修复脚本放在<head>标签中层无法隐藏的问题
  * 2011-10-30 v1.3  修复IE6~7下二级菜单移到第二项隐藏的问题
  */
-
+var smartMenuTarget=null;
 (function($) {
     var D = $(document).data("func", {});
     $.smartMenu = $.noop;
@@ -106,6 +106,7 @@
 
         $(this).each(function() {
             this.oncontextmenu = function(e) {
+                smartMenuTarget=e.target;
                 //回调
                 if ($.isFunction(params.beforeShow)) {
                     params.beforeShow.call(this);
