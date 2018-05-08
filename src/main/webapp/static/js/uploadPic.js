@@ -64,7 +64,7 @@ document.addEventListener('paste', function (event) {
                             });
                             //添加右键删除功能
                             $(".stretch-photo-container").parent(".line-div").smartMenu(imgSettings);
-
+                            dealLastLine();
                             //可以在这里写上传逻辑 直接将base64编码的字符串上传（可以尝试传入blob对象，看看后台程序能否解析）
                         };//reader.onload
                         reader.readAsDataURL(blob);

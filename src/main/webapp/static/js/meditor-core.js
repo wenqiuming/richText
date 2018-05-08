@@ -105,7 +105,9 @@ $(window).click(function (e) {
         }
     }
     //判断是否行内元素
-    var lineDiv = $(e.target).parents(".line-div");
+    var selection = window.getSelection ? window.getSelection() : document.getSelection();
+    var anchorNode = selection.anchorNode;
+    var lineDiv = $(anchorNode).parents(".line-div");
     if (lineDiv.length === 0&& !$(e.target).hasClass("line-div")) {
         return;
     }
@@ -842,6 +844,7 @@ var codeSettings = [
             var selection = window.getSelection ? window.getSelection() : document.getSelection();
             var p = findLineDiv(selection.anchorNode);
             p.remove();
+            dealLastLine();
         }
     }, {
         text: "复制内容",
@@ -856,6 +859,7 @@ var imgSettings = [
         func: function () {
             var p = $(".stretch-photo-container.active").parents(".line-div")[0];
             p.remove();
+            dealLastLine();
         }
     }, {
         text: "居左",
@@ -877,3 +881,10 @@ var imgSettings = [
         }
     }]
 ];
+function dealLastLine() {
+    //最后空留一行
+    if (rootNode.childNodes[rootNode.childNodes.length - 1].outerHTML != '<div class="line-div"><br></div>') {
+        var lastLineNode = $("<div class='line-div'><br/></div>")[0];
+        $(rootNode).append(lastLineNode);
+    }
+}
