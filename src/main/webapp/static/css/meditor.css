@@ -346,8 +346,13 @@ img.glyphicon {
 .select-number li > a:hover {
     background-color: #EBEBEB !important;
 }
+.line-hr-div{
+    padding-top: 10px;
+}
 hr.line-hr{
-    margin-top: 10px !important;
+    margin-top: 0 !important;
+    margin-bottom: 0; !important;
+    padding-bottom: 15px;
 }
 /* smartMenu.css	by zhangxinxu */
 .smart_menu_box {

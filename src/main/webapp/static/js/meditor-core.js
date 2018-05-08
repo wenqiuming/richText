@@ -689,13 +689,18 @@ function fontStyle(type) {
 //横线
 function hrStyle(num) {
     setFocus();
-    var hrCode = "<div class='line-div' contenteditable='false'><hr class='line-hr hr-{0}'/></div>".format(num);
+    var hrCode = "<div class='line-div line-hr-div' contenteditable='false'><hr class='line-hr hr-{0}'/></div>".format(num);
     var underLine = "<div class='line-div'><br ></div>";
     var selection = window.getSelection ? window.getSelection() : document.getSelection();
     var anchorNode = selection.anchorNode;
     var nowLine = findLineDiv(anchorNode,selection);
     insertAfter($(hrCode)[0], nowLine);
     insertAfter($(underLine)[0], nowLine.nextElementSibling);
+    $(".line-hr").parent(".line-div").smartMenu(hrSettings,{"name":"hr"});
+    //如果空行,删除
+    if (nowLine.innerHTML===undefined||nowLine.innerHTML===null||nowLine.innerHTML==="<br>"||$.trim(nowLine.innerHTML.replace(/&nbsp;/g,""))===""){
+        nowLine.remove();
+    }
 }
 
 //清除样式
@@ -882,6 +887,16 @@ var blockSettings = [
             var p = findLineDiv(selection.anchorNode,selection);
             var nline=$("<div class='line-div'><br/></div>")[0];
             insertBefore(nline,p);
+        }
+    }]
+];
+var hrSettings = [
+    [{
+        text: "删除",
+        func: function () {
+            var p=$(smartMenuTarget).hasClass("line-hr-div")?smartMenuTarget:$(smartMenuTarget).parents(".line-div")[0];
+            p.remove();
+            dealLastLine();
         }
     }]
 ];
