@@ -10,99 +10,23 @@ var position = {};
 
 var titleType = ["H1", "H2", "H3", "H4", "SECTION"];
 var titleName = ["H1", "H2", "H3", "H4", "正文"];
-var fontList=[1,2,3,4,5,6,7];
-var fontSizeList=[12,14,16,18,20,22,24];
+var fontList = [1, 2, 3, 4, 5, 6, 7];
+var fontSizeList = [12, 14, 16, 18, 20, 22, 24];
 var breakActiveDiv;
 
 /*key down function */
 $(window).keydown(function (e) {
     // console.log(e.keyCode);
     var selection = window.getSelection ? window.getSelection() : document.getSelection();
-    var offset = selection.anchorOffset;
     var anchorNode = selection.anchorNode;
-    var lineDiv=findLineDiv(anchorNode);
+    //判断是否行内元素
+    var existLine = $(e.target).parents(".line-div");
+    if (existLine.length === 0 && !$(e.target).hasClass("line-div")) {
+        return;
+    }
     breakActiveDiv = findLineDiv(anchorNode);
-    //key ENTER
-    // if (e.keyCode === 13) {
-    //     e.preventDefault();
-    //     if (anchorNode === rootNode) {
-    //         var lineNode = $("<div class='line-div'><br/></div>")[0];
-    //         $(rootNode).append(lineNode);
-    //     } else {
-    //         var operNode = findLineDiv(anchorNode);
-    //         createNewLine(selection, offset);
-    //         remainContent(selection, offset);
-    //         console.log(selection);
-    //         if ($(anchorNode).hasClass("line-div") && offset === 0) {
-    //             console.log("do nothing");
-    //         } else {
-    //             selection.collapse(operNode.nextSibling, 0);
-    //         }
-    //     }
-    // }
-    // if (e.keyCode===8&&lineDiv.childNodes.length>0&&lineDiv.innerHTML!="<br>"){
-    //     //在行首
-    //     if ((anchorNode===lineDiv&&offset===0)||isLineStart(anchorNode,offset)){
-    //         if (lineDiv===anchorNode){
-    //             position.parentNode=anchorNode.previousSibling;
-    //             position.offset=anchorNode.previousSibling.childNodes.length;
-    //         }else{
-    //             savePos();
-    //         }
-    //         if (lineDiv!==rootNode.childNodes[0]){
-    //             var childNode=lineDiv.childNodes[0];
-    //             var len=lineDiv.previousSibling.childNodes.length;
-    //             var brs=lineDiv.previousSibling.querySelectorAll("br");
-    //             var i=0;
-    //             while (i<brs.length){
-    //                 brs[0].remove();
-    //                 i++;
-    //                 len--;
-    //             }
-    //             while (childNode!=null&&childNode!=undefined){
-    //                 lineDiv.previousSibling.appendChild(childNode);
-    //                 childNode=lineDiv.childNodes[0];
-    //             }
-    //             if (lineDiv===anchorNode){
-    //                 selection.collapse(position.parentNode,position.offset);
-    //             }else{
-    //                 selection.collapse(position.parentNode,0);
-    //             }
-    //             lineDiv.remove();
-    //             e.preventDefault();
-    //         }
-    //     }
-    //
-    //     //处理删掉span前面的字符
-    //     if (anchorNode===lineDiv&&offset>0){
-    //         var removeNode=anchorNode.childNodes[offset-1];
-    //         var eleNode=findLastSingleEle(removeNode);
-    //         if (eleNode.nodeType===3){
-    //             if (eleNode.textContent.length>0){
-    //                 eleNode.textContent=eleNode.textContent.substr(0,eleNode.textContent.length-1);
-    //                 selection.collapse(eleNode,eleNode.textContent.length);
-    //             }else{
-    //                 eleNode.remove();
-    //             }
-    //         }else{
-    //             eleNode.remove();
-    //         }
-    //         e.preventDefault();
-    //     }
-    // }
-
-
 });
 
-function findLastSingleEle(node) {
-    if (node.nodeType===3){
-        return node;
-    }else if(node.childNodes.length===1&&node.childNodes[0].nodeType===1&&node.childNodes[0].childNodes.length===0) {
-        return node.childNodes[0];
-    }else{
-        return findElementNode(node.childNodes[node.childNodes.length-1]);
-    }
-}
 
 /**
  * key up function
@@ -110,15 +34,17 @@ function findLastSingleEle(node) {
 $(window).keyup(function (e) {
     var selection = window.getSelection ? window.getSelection() : document.getSelection();
     var anchorNode = selection.anchorNode;
+    //判断是否行内元素
+    var existLine = $(anchorNode).parents(".line-div");
+    if (existLine.length === 0 && !$(anchorNode).hasClass("line-div")) {
+        return;
+    }
     if (e.keyCode === 8) {
         if (rootNode.childNodes.length === 0) {
             var lineNode = $("<div class='line-div' p-line-height='{0}'><br/></div>".format($("#show-line-height").text()))[0];
             $(rootNode).append(lineNode);
             selection.collapse(lineNode, 0);
         }
-        //去掉遗留的文字样式
-      //  $('font[face="Glyphicons Halflings"]').removeAttr("face");
-
     }
     //最后空留一行
     if (rootNode.childNodes[rootNode.childNodes.length - 1].outerHTML != '<div class="line-div"><br></div>') {
@@ -148,8 +74,8 @@ $(window).keyup(function (e) {
         }
         //如果没有行距样式，默认给予目前选定的行距
         var nowLine = findLineDiv(anchorNode);
-        if ($(nowLine).attr("p-line-height")===undefined){
-            $(nowLine).attr("p-line-height",$("#show-line-height").text());
+        if ($(nowLine).attr("p-line-height") === undefined) {
+            $(nowLine).attr("p-line-height", $("#show-line-height").text());
         }
     }
     //动态标题样式显示
@@ -169,6 +95,20 @@ $(window).keyup(function (e) {
  * mouse click function
  */
 $(window).click(function (e) {
+    var node = document.getElementsByClassName("icon-popup");
+    var iconNode = document.getElementById("txt_boostrap_icon");
+    //表情框出现隐藏控制
+    if (e.target === iconNode || iconNode.contains(e.target)) {
+    } else {
+        if (node.length > 0 && e.target !== node[0] && !node[0].contains(e.target)) {
+            node[0].remove();
+        }
+    }
+    //判断是否行内元素
+    var lineDiv = $(e.target).parents(".line-div");
+    if (lineDiv.length === 0&& !$(e.target).hasClass("line-div")) {
+        return;
+    }
     if (isRootNodeActive(e.target)) {
         dynamicModHeaderShow();
         dynamicModFontShow();
@@ -177,15 +117,6 @@ $(window).click(function (e) {
         dynamicModFontCssShow();
         dynamicModJustifyShow();
         dynamicModLineHeightShow();
-    }
-    //表情框出现隐藏控制
-    var node = document.getElementsByClassName("icon-popup");
-    var iconNode = document.getElementById("txt_boostrap_icon");
-    if (e.target === iconNode || iconNode.contains(e.target)) {
-    } else {
-        if (node.length > 0 && e.target !== node[0] && !node[0].contains(e.target)) {
-            node[0].remove();
-        }
     }
 });
 
@@ -400,7 +331,7 @@ function headerStyle(ele) {
 function fontSizeStyle(size) {
     setFocus();
     console.log(fontList[fontSizeList.indexOf(size)]);
-    document.execCommand('fontSize', false,fontList[fontSizeList.indexOf(size)]);
+    document.execCommand('fontSize', false, fontList[fontSizeList.indexOf(size)]);
     $("#show_font_size").text(size);
 }
 
@@ -660,11 +591,11 @@ function dynamicModJustifyShow() {
 function dynamicModLineHeightShow() {
     var selection = window.getSelection ? window.getSelection() : document.getSelection();
     var anchorNode = selection.anchorNode;
-    var nowLine=findLineDiv(anchorNode);
-    var lineNum=$(nowLine).attr("p-line-height");
-    if (lineNum===null||lineNum===undefined){
-        $("#show-line-height").html("1");
-    }else{
+    var nowLine = findLineDiv(anchorNode);
+    var lineNum = $(nowLine).attr("p-line-height");
+    if (lineNum === null || lineNum === undefined) {
+        $("#show-line-height").html("1.4");
+    } else {
         $("#show-line-height").html(lineNum);
     }
 }
@@ -741,14 +672,14 @@ function fontStyle(type) {
     }
 }
 //横线
-function hrStyle(style) {
-    var hrCode="<div class='line-div' contenteditable='false'><hr/></div>";
-    var underLine="<div class='line-div'><br></div>";
+function hrStyle(num) {
+    var hrCode = "<div class='line-div' contenteditable='false'><hr class='line-hr hr-{0}'/></div>".format(num);
+    var underLine = "<div class='line-div'><br ></div>";
     var selection = window.getSelection ? window.getSelection() : document.getSelection();
     var anchorNode = selection.anchorNode;
     var nowLine = findLineDiv(anchorNode);
-    insertAfter($(hrCode)[0],nowLine);
-    insertAfter($(underLine)[0],nowLine.nextElementSibling);
+    insertAfter($(hrCode)[0], nowLine);
+    insertAfter($(underLine)[0], nowLine.nextElementSibling);
 }
 
 //清除样式
@@ -762,7 +693,7 @@ function lineHeightStyle(num) {
     var selection = window.getSelection ? window.getSelection() : document.getSelection();
     var anchorNode = selection.anchorNode;
     var nowLine = findLineDiv(anchorNode);
-    $(nowLine).attr("p-line-height",num);
+    $(nowLine).attr("p-line-height", num);
     $("#show-line-height").html(num);
     setFocus();
     restorePos();
@@ -812,6 +743,8 @@ function insertCodeStyle() {
     $(".prettyprint").removeClass("prettyprinted");
     prettyPrint();
     selection.collapse(codeLineDiv, 1);
+    //添加右键删除功能
+    $("pre").parent(".line-div").smartMenu(codeSettings);
 }
 
 /**
@@ -867,6 +800,8 @@ function insertBlockquoteStyle() {
     var newLineDiv = $("<div class='line-div'><br></div>")[0];
     insertAfter(newLineDiv, nowLine.nextSibling);
     selection.collapse(codeLineDiv, 1);
+    //添加右键删除功能
+    $(".blockquote-body").parent(".line-div").smartMenu(codeSettings);
 }
 
 
@@ -883,22 +818,7 @@ $(function () {
 function clickIcon(val) {
     setFocus();
     var emoji = "<img src='' class='" + val + "'/>";
-    var selection = window.getSelection ? window.getSelection() : document.getSelection();
-    var lineCount=rootNode.childNodes.length;
-    //savePos();
-    document.execCommand("insertHtml",false,emoji);
-    //var afterLineCount=rootNode.childNodes.length;
-    // if(afterLineCount>lineCount){
-    //     var anchorNode = selection.anchorNode;
-    //     var afterLineDiv=findLineDiv(anchorNode);
-    //     var otherApp=afterLineDiv.childNodes[0];
-    //     while (otherApp!=null&&otherApp!=undefined){
-    //         afterLineDiv.previousSibling.appendChild(otherApp);
-    //         otherApp=afterLineDiv.childNodes[0];
-    //     }
-    //     afterLineDiv.remove();
-    //     selection.collapse(position.parentNode,0);
-    // }
+    document.execCommand("insertHtml", false, emoji);
 }
 
 /**
@@ -913,3 +833,47 @@ function findElementNode(anchorNode) {
         return findElementNode(anchorNode.parentNode);
     }
 }
+
+
+var codeSettings = [
+    [{
+        text: "删除",
+        func: function () {
+            var selection = window.getSelection ? window.getSelection() : document.getSelection();
+            var p = findLineDiv(selection.anchorNode);
+            p.remove();
+        }
+    }, {
+        text: "复制内容",
+        func: function () {
+            document.execCommand('copy');
+        }
+    }]
+];
+var imgSettings = [
+    [{
+        text: "删除",
+        func: function () {
+            var p = $(".stretch-photo-container.active").parents(".line-div")[0];
+            p.remove();
+        }
+    }, {
+        text: "居左",
+        func: function () {
+            var p = $(".stretch-photo-container.active").parents(".line-div")[0];
+            $(p).css("text-align", "left");
+        }
+    }, {
+        text: "居中",
+        func: function () {
+            var p = $(".stretch-photo-container.active").parents(".line-div")[0];
+            $(p).css("text-align", "center");
+        }
+    }, {
+        text: "居右",
+        func: function () {
+            var p = $(".stretch-photo-container.active").parents(".line-div")[0];
+            $(p).css("text-align", "right");
+        }
+    }]
+];

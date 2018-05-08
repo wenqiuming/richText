@@ -44,8 +44,16 @@ document.addEventListener('paste', function (event) {
                             // event.target.result 即为图片的Base64编码字符串
                             var base64_str = event.target.result;
                             var outerHtml = createStretchPic(base64_str).outerHTML;
-                            document.execCommand("insertHTML", false, "&nbsp;" + outerHtml + "&nbsp;");
-                            document.execCommand("insertText", false, "\r\n");
+                            var selection = window.getSelection ? window.getSelection() : document.getSelection();
+                            var anchorNode = selection.anchorNode;
+                            var nowLine=findLineDiv(anchorNode);
+                            var imgLine=$("<div class='line-div'></div>")[0];
+                            $(imgLine).append(outerHtml);
+                            insertAfter(imgLine,nowLine);
+                            console.log("replace",nowLine.innerHTML.replace(/&nbsp;/g,""));
+                            if (nowLine.innerHTML==="<br>"||$.trim(nowLine.innerHTML.replace(/&nbsp;/g,""))===""){
+                                nowLine.remove();
+                            }
                             $(".stretch-photo-container .focus-cell").css("display", "none");
                             $(".right-bottom-focus").mousedown(function (e) {
                                 active_StretchPic_isEnter = true;
@@ -54,6 +62,9 @@ document.addEventListener('paste', function (event) {
                                 active_StretchPic_wid = $(".stretch-photo-container.active img").width();
                                 active_StretchPic_hei = $(".stretch-photo-container.active img").height();
                             });
+                            //添加右键删除功能
+                            $(".stretch-photo-container").parent(".line-div").smartMenu(imgSettings);
+
                             //可以在这里写上传逻辑 直接将base64编码的字符串上传（可以尝试传入blob对象，看看后台程序能否解析）
                         };//reader.onload
                         reader.readAsDataURL(blob);
@@ -153,6 +164,7 @@ function createStretchPic(srcRes) {
     $(imgContainer).append(leftBottom);
     $(imgContainer).append(rightTop);
     $(imgContainer).append(rightBottom);
+    $(imgContainer).attr("contenteditable","false");
     var img = document.createElement('img');
     img.src = srcRes;
     $(imgContainer).append(img);
@@ -163,12 +175,16 @@ $(window).click(function (e) {
     var tarEle = e.target;
     var isStretchPic = false;
     $(".stretch-photo-container").removeClass("active");
-    if ($(tarEle).hasClass("stretch-photo-container") || $($(tarEle).parent()[0]).hasClass("stretch-photo-container")) {
+    if ($(tarEle).hasClass("stretch-photo-container")) {
         isStretchPic = true;
-        $($(tarEle).parent()).addClass("active");
         $($(tarEle)).addClass("active");
     }
+    if ($(tarEle).parents(".stretch-photo-container").length>0) {
+        isStretchPic = true;
+        $($(tarEle).parents(".stretch-photo-container")[0]).addClass("active");
+    }
     $(".stretch-photo-container .focus-cell").css({"display": "none"});
+
     if (isStretchPic) {
         $(".stretch-photo-container.active").width($(".stretch-photo-container.active img").width);
         $(".stretch-photo-container.active").height($(".stretch-photo-container.active img").height);

@@ -142,7 +142,20 @@
             <button type="button" class="btn btn-default" id="btn-italic" onclick="fontStyle('italic')"><i class="fa fa-italic" aria-hidden="true"></i></button>
             <button type="button" class="btn btn-default" id="btn-underline" onclick="fontStyle('underLine')"><i class="fa fa-underline" aria-hidden="true"></i></button>
             <button type="button" class="btn btn-default" id="btn-strikethrough" onclick="fontStyle('strikeThrough')"><i class="fa fa-strikethrough" aria-hidden="true"></i></button>
-            <button type="button" class="btn btn-default" id="btn-hr" onclick="hrStyle('strikeThrough')"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></button>
+            <!--行距-->
+            <div class="btn-group">
+                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" title="字号"
+                        tooltip="true" style="width: 58px">
+                    <i class="fa fa-ellipsis-h" aria-hidden="true"></i>&nbsp; <span class="caret"></span></button>
+                <ul class="dropdown-menu  select-number select-line" role="menu">
+                    <li class="font-pick"><a href="javascript:hrStyle(1)"><span class="hr-span hr-1"></span></a></li>
+                    <li class="font-pick"><a href="javascript:hrStyle(2)"><span class="hr-span hr-2"></span></a></li>
+                    <li class="font-pick"><a href="javascript:hrStyle(3)"><span class="hr-span hr-3"></span></a></li>
+                    <li class="font-pick"><a href="javascript:hrStyle(4)"><span class="hr-span hr-4"></span></a></li>
+                    <li class="font-pick"><a href="javascript:hrStyle(5)"><span class="hr-span hr-5"></span></a></li>
+                </ul>
+            </div>
+
             <button type="button" class="btn btn-default" id="btn-clearFontStyle" onclick="clearFontStyle()"><i class="fa fa-eraser" aria-hidden="true"></i></button>
 
             <!--对齐-->
@@ -156,13 +169,14 @@
             <div class="btn-group">
                 <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" title="字号"
                         tooltip="true" style="width: 58px">
-                    <b id="show-line-height">1</b>&nbsp; <span class="caret"></span></button>
+                    <b id="show-line-height">1.4</b>&nbsp; <span class="caret"></span></button>
                 <ul class="dropdown-menu  select-number" role="menu">
                     <li class="font-pick"><a href="javascript:lineHeightStyle(1)">1</a></li>
                     <li class="font-pick"><a href="javascript:lineHeightStyle(1.2)">1.2</a></li>
-                    <li class="font-pick"><a href="javascript:lineHeightStyle(1.5)">1.5</a></li>
+                    <li class="font-pick"><a href="javascript:lineHeightStyle(1.4)">1.4</a></li>
                     <li class="font-pick"><a href="javascript:lineHeightStyle(1.8)">1.8</a></li>
                     <li class="font-pick"><a href="javascript:lineHeightStyle(2)">2</a></li>
+                    <li class="font-pick"><a href="javascript:lineHeightStyle(2.5)">2.5</a></li>
                 </ul>
             </div>
             <!--序列-->
@@ -173,7 +187,7 @@
             <!--插件-->
             <button type="button" class="btn btn-default"><i class="fa fa-th" aria-hidden="true"></i></button>
             <button type="button" class="btn btn-default" onclick="insertCodeStyle()"><i class="fa fa-code" aria-hidden="true"></i></button>
-            <button type="button" class="btn btn-default"><i class="fa fa-sitemap" aria-hidden="true"></i></button>
+            <button type="button" class="btn btn-default" onclick="cpaste()"><i class="fa fa-sitemap" aria-hidden="true"></i></button>
             <button type="button" class="btn btn-default" onclick="insertBlockquoteStyle()"><i class="fa fa-tag" aria-hidden="true"></i></button>
             <button type="button" class="btn btn-default" id="txt_boostrap_icon"><i class="fa fa-smile-o" aria-hidden="true"></i></button>
         </div>
@@ -182,6 +196,7 @@
 <div class="meditor-body" contenteditable="true">
     <div class="line-div">AAA<span><b>absd</b>323</span><img class="glyphicon glyphicon-asterisk" src="" style="vertical-align: baseline"/></div>
 </div>
+
 </body>
 <script src="../../static/js/jquery-2.0.3.js"></script>
 <script src="../../static/js/bootstrap.min.js"></script>
@@ -189,5 +204,6 @@
 <script src="../../static/js/uploadPic.js"></script>
 <script src="../../static/js/prettify.js"></script>
 <script src="../../static/js/iconPicker.js"></script>
-<script src="../../static/js/mouse-click-menu.js"></script>
+<script src="../../static/js/clipboard.min.js"></script>
+<script src="../../static/js/jquery-smartMenu.js"></script>
 </html>
