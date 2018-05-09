@@ -988,10 +988,182 @@ var imgSettings = [
         }
     }]
 ];
+var tableSettings = [
+    [{
+        text: "删除表格",
+        func: function () {
+            var selection = window.getSelection ? window.getSelection() : document.getSelection();
+            var anchorNode = selection.anchorNode;
+            var p=findLineDiv(anchorNode,selection);
+            p.remove();
+            dealLastLine();
+        }
+    }, {
+        text: "删除当前行",
+        func: function () {
+            var selection = window.getSelection ? window.getSelection() : document.getSelection();
+            var anchorNode = selection.anchorNode;
+            delTableRow(anchorNode,selection);
+            dealLastLine();
+        }
+    }, {
+        text: "删除当前列",
+        func: function () {
+            var selection = window.getSelection ? window.getSelection() : document.getSelection();
+            var anchorNode = selection.anchorNode;
+            delTableCol(anchorNode,selection);
+            dealLastLine();
+        }
+    }, {
+        text: "上方添加行",
+        func: function () {
+            var selection = window.getSelection ? window.getSelection() : document.getSelection();
+            var anchorNode = selection.anchorNode;
+            var tr=$(anchorNode).parents("tr")[0];
+            var tdCount=$(tr).find("td").length;
+            var newTr="<tr>";
+            for (var i=0;i<tdCount;i++){
+                newTr+="<td></td>";
+            }
+            newTr+="</tr>";
+            insertBefore($(newTr)[0],tr);
+        }
+    }, {
+        text: "下方添加行",
+        func: function () {
+            var selection = window.getSelection ? window.getSelection() : document.getSelection();
+            var anchorNode = selection.anchorNode;
+            var tr=$(anchorNode).parents("tr")[0];
+            var tdCount=$(tr).find("td").length;
+            var newTr="<tr>";
+            for (var i=0;i<tdCount;i++){
+                newTr+="<td></td>";
+            }
+            newTr+="</tr>";
+            insertAfter($(newTr)[0],tr);
+        }
+    }, {
+        text: "左侧添加列",
+        func: function () {
+            var selection = window.getSelection ? window.getSelection() : document.getSelection();
+            var anchorNode = selection.anchorNode;
+            var tr=$(anchorNode).parents("tr")[0];
+            var td=$(anchorNode).parents("td")[0];
+            var ptrChilds=$(tr).find("td");
+            var index=0;
+            for(var j=0;j<ptrChilds.length;j++){
+                if (td===ptrChilds[j]){
+                    index=j;
+                }
+            }
+            for(var i=0;i<allTr.length;i++){
+                var tds=$(allTr[i]).find("td");
+                tds[index].remove();
+            }
+
+            var tdCount=$(tr).find("td").length;
+            var newTr="<tr>";
+            for (var i=0;i<tdCount;i++){
+                newTr+="<td></td>";
+            }
+            newTr+="</tr>";
+            insertAfter($(newTr)[0],tr);
+        }
+    }, {
+        text: "右侧添加列",
+        func: function () {
+           //var p = $(".stretch-photo-container.active").parents(".line-div")[0];
+            var p=$(smartMenuTarget).parents(".line-div")[0];
+            $(p).find("img").css("width", "auto");
+            $(p).find("img").css("height", "auto");
+            $(p).find(".stretch-photo-container").css("width", "auto");
+        }
+    }]
+];
 function dealLastLine() {
     //最后空留一行
     if (rootNode.childNodes.length===0||rootNode.childNodes[rootNode.childNodes.length - 1].outerHTML != '<div class="line-div"><br></div>') {
         var lastLineNode = $("<div class='line-div'><br/></div>")[0];
         $(rootNode).append(lastLineNode);
+    }
+}
+
+
+function insertLink() {
+    savePos();
+    $("#meditor_link_addr").val("http://");
+    $("#meditor_link_name").val("");
+    $("#meditor_link_blank").removeAttr("checked");
+    $("#linkModal").modal("show");
+    setTimeout(function () {
+        var addrInput=$("#meditor_link_addr")[0];
+        addrInput.select();
+    },200);
+}
+function doInsertLink() {
+    setFocus();
+    restorePos();
+    var name=$("#meditor_link_name").val();
+    var addr=$("#meditor_link_addr").val();
+    if ($.trim(addr)===''){
+        $("#linkModal").modal("hide");
+        return;
+    }
+    if ($.trim(name)===''){
+        name=addr;
+    }
+    var isBlank=$("#meditor_link_blank").is(':checked');
+    var openStyle=isBlank?"_blank":"_self";
+    var linkHtml="<a href='{0}' title='{1}' target='{2}' class='meditor-a-link'>{3}</a>".format(addr,addr,openStyle,name);
+    document.execCommand("insertHtml",false,linkHtml);
+    $("#linkModal").modal("hide");
+}
+$(function(){
+    $("table").colResizable({
+        //fit flex overflow
+        resizeMode: 'fit',
+        liveDrag:true,
+        draggingClass:"dragging"
+    });
+    $("table").smartMenu(tableSettings,{"name":"table"});
+});
+
+/**
+ * 删除table行
+ * @param anchorNode
+ * @param selection
+ */
+function delTableRow(anchorNode,selection) {
+    var t=$(anchorNode).parents("table")[0];
+    var trLen=$(t).find("tr").length;
+    if (trLen>1){
+        var tr=$(anchorNode).parents("tr")[0];
+        tr.remove();
+    }else{
+        var lineDiv=findLineDiv(anchorNode,selection);
+        lineDiv.remove();
+    }
+}
+
+function delTableCol(anchorNode,selection) {
+    var t=$(anchorNode).parents("table")[0];
+    var allTr= $(t).find("tr");
+    var ptr=$(anchorNode).parents("tr")[0];
+    var ptrChilds=$(ptr).find("td");
+    if (ptrChilds.length>1){
+        var ptd=$(anchorNode).parents("td")[0];
+        var index=0;
+        for(var j=0;j<ptrChilds.length;j++){
+            if (ptd===ptrChilds[j]){
+                index=j;
+            }
+        }
+        for(var i=0;i<allTr.length;i++){
+            var tds=$(allTr[i]).find("td");
+            tds[index].remove();
+        }
+    }else{
+        var lineDiv=findLineDiv(anchorNode,selection);
+        lineDiv.remove();
     }
 }
