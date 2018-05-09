@@ -19,8 +19,8 @@ $(window).keydown(function (e) {
     var selection = window.getSelection ? window.getSelection() : document.getSelection();
     var anchorNode = selection.anchorNode;
     //处理第一行
-    var nowLine=findLineDiv(anchorNode,selection);
-    if (e.keyCode===8&&nowLine===$(rootNode).children("div.line-div")[0]&&nowLine.innerHTML==='<br>'){
+    var nowLine = findLineDiv(anchorNode, selection);
+    if (e.keyCode === 8 && nowLine === $(rootNode).children("div.line-div")[0] && nowLine.innerHTML === '<br>') {
         nowLine.remove();
     }
     //判断是否行内元素
@@ -28,7 +28,7 @@ $(window).keydown(function (e) {
     if (existLine.length === 0 && !$(e.target).hasClass("line-div")) {
         return;
     }
-    breakActiveDiv = findLineDiv(anchorNode,selection);
+    breakActiveDiv = findLineDiv(anchorNode, selection);
 });
 
 
@@ -39,7 +39,7 @@ $(window).keyup(function (e) {
     var selection = window.getSelection ? window.getSelection() : document.getSelection();
     var anchorNode = selection.anchorNode;
     //最后空留一行
-   dealLastLine();
+    dealLastLine();
     //判断是否行内元素
     var existLine = $(anchorNode).parents(".line-div");
     if (existLine.length === 0 && !$(anchorNode).hasClass("line-div")) {
@@ -52,13 +52,13 @@ $(window).keyup(function (e) {
             selection.collapse(lineNode, 0);
         }
         //处理code 代码块
-        if ($(anchorNode).hasClass("prettyprint")){
+        if ($(anchorNode).hasClass("prettyprint")) {
             $(anchorNode).html("<div><br/></div>");
-        }else if ($(anchorNode).parents(".prettyprint").length>0&&$($(anchorNode).parents(".prettyprint")[0]).children("div").length===0){
-            var preNode=$(anchorNode).parents(".prettyprint")[0];
+        } else if ($(anchorNode).parents(".prettyprint").length > 0 && $($(anchorNode).parents(".prettyprint")[0]).children("div").length === 0) {
+            var preNode = $(anchorNode).parents(".prettyprint")[0];
             savePos();
-            var container=$("<div></div>")[0];
-            mvChildNode(container,preNode);
+            var container = $("<div></div>")[0];
+            mvChildNode(container, preNode);
             preNode.appendChild(container);
             restorePos();
         }
@@ -74,7 +74,7 @@ $(window).keyup(function (e) {
         if (findLineDivBelow(anchorNode) !== null && findLineDivBelow(anchorNode).nodeType === 1 && findLineDivBelow(anchorNode).localName === 'pre') {
             return;
         }
-        var lineDiv = findLineDiv(anchorNode,selection);
+        var lineDiv = findLineDiv(anchorNode, selection);
         if (breakActiveDiv === lineDiv) {
             //一个line-div出现行元素大于1,移除该line-div中的后一个,新增line-div,内容为后一个行元素
             if (lineDiv.childNodes.length > 1 && lineDiv.childNodes[0].nodeType === 1 && titleType.indexOf(lineDiv.childNodes[0].localName.toUpperCase()) >= 0) {
@@ -86,13 +86,13 @@ $(window).keyup(function (e) {
             }
         }
         //如果没有行距样式，默认给予目前选定的行距
-        var nowLine = findLineDiv(anchorNode,selection);
+        var nowLine = findLineDiv(anchorNode, selection);
         if ($(nowLine).attr("p-line-height") === undefined) {
             $(nowLine).attr("p-line-height", $("#show-line-height").text());
         }
     }
     //动态标题样式显示
-    if (isRootNodeActive(e.target)&&anchorNode!==null&&anchorNode!==undefined) {
+    if (isRootNodeActive(e.target) && anchorNode !== null && anchorNode !== undefined) {
         dynamicModHeaderShow();
         dynamicModFontShow();
         dynamicModFontColorShow();
@@ -121,10 +121,10 @@ $(window).click(function (e) {
     var selection = window.getSelection ? window.getSelection() : document.getSelection();
     var anchorNode = selection.anchorNode;
     var lineDiv = $(anchorNode).parents(".line-div");
-    if (lineDiv.length === 0&& !$(e.target).hasClass("line-div")) {
+    if (lineDiv.length === 0 && !$(e.target).hasClass("line-div")) {
         return;
     }
-    if (isRootNodeActive(e.target)&&anchorNode!==null&&anchorNode!==undefined) {
+    if (isRootNodeActive(e.target) && anchorNode !== null && anchorNode !== undefined) {
         dynamicModHeaderShow();
         dynamicModFontShow();
         dynamicModFontColorShow();
@@ -155,17 +155,17 @@ function findRootBelow(node) {
  * @param node
  * @returns {*}
  */
-function findLineDiv(node,selection) {
-    if (node===null||node===undefined){
+function findLineDiv(node, selection) {
+    if (node === null || node === undefined) {
         return null;
     }
-    if (node===rootNode){
+    if (node === rootNode) {
         return node.childNodes[selection.anchorOffset];
     }
     if ($(node).hasClass("line-div")) {
         return node;
     } else {
-        return findLineDiv(node.parentNode,selection);
+        return findLineDiv(node.parentNode, selection);
     }
 }
 
@@ -175,7 +175,7 @@ function findLineDiv(node,selection) {
  * @returns {*}
  */
 function findLineDivBelow(node) {
-    if (node===null){
+    if (node === null) {
         return null;
     }
     if ($(node).hasClass("line-div")) {
@@ -322,7 +322,7 @@ function headerStyle(ele) {
     setFocus();
     var selection = window.getSelection ? window.getSelection() : document.getSelection();
     var anchorNode = selection.anchorNode;
-    var lineDiv = findLineDiv(anchorNode,selection);
+    var lineDiv = findLineDiv(anchorNode, selection);
     savePos();
     var tag = $("<{0}>".format(ele))[0];
     var lineBelow = findLineDivBelow(anchorNode);
@@ -595,18 +595,19 @@ function dynamicModJustifyShow() {
     if (anchorNode.nodeType === 1) {
         var justifyCss = $(anchorNode).css("text-align");
         selectAlign(justifyCss);
-    }else{
+    } else {
         var pjustifyCss = $(anchorNode.parentNode).css("text-align");
         selectAlign(pjustifyCss);
     }
 }
+
 /**
  * 动态显示line-height类型
  */
 function dynamicModLineHeightShow() {
     var selection = window.getSelection ? window.getSelection() : document.getSelection();
     var anchorNode = selection.anchorNode;
-    var nowLine = findLineDiv(anchorNode,selection);
+    var nowLine = findLineDiv(anchorNode, selection);
     var lineNum = $(nowLine).attr("p-line-height");
     if (lineNum === null || lineNum === undefined) {
         $("#show-line-height").html("1.4");
@@ -633,7 +634,6 @@ function buildLineBelowContainer(lineBelow) {
         return lineBelow;
     } else {
         var section = $("<section>")[0];
-        //section.innerHTML=lineBelow.parentNode.innerHTML;
         mvChildNode(section, lineBelow.parentNode);
         return section;
     }
@@ -657,7 +657,6 @@ function removeAllChildNode(targetEl) {
         targetEl.childNodes[0].remove();
     }
 }
-
 
 
 //设置字体前景色
@@ -686,6 +685,7 @@ function fontStyle(type) {
         $btn.addClass("font-style-active");
     }
 }
+
 //横线
 function hrStyle(num) {
     setFocus();
@@ -693,12 +693,12 @@ function hrStyle(num) {
     var underLine = "<div class='line-div'><br ></div>";
     var selection = window.getSelection ? window.getSelection() : document.getSelection();
     var anchorNode = selection.anchorNode;
-    var nowLine = findLineDiv(anchorNode,selection);
+    var nowLine = findLineDiv(anchorNode, selection);
     insertAfter($(hrCode)[0], nowLine);
     insertAfter($(underLine)[0], nowLine.nextElementSibling);
-    $(".line-hr").parent(".line-div").smartMenu(hrSettings,{"name":"hr"});
+    $(".line-hr").parent(".line-div").smartMenu(hrSettings, {"name": "hr"});
     //如果空行,删除
-    if (nowLine.innerHTML===undefined||nowLine.innerHTML===null||nowLine.innerHTML==="<br>"||$.trim(nowLine.innerHTML.replace(/&nbsp;/g,""))===""){
+    if (nowLine.innerHTML === undefined || nowLine.innerHTML === null || nowLine.innerHTML === "<br>" || $.trim(nowLine.innerHTML.replace(/&nbsp;/g, "")) === "") {
         nowLine.remove();
     }
 }
@@ -714,7 +714,7 @@ function lineHeightStyle(num) {
     savePos();
     var selection = window.getSelection ? window.getSelection() : document.getSelection();
     var anchorNode = selection.anchorNode;
-    var nowLine = findLineDiv(anchorNode,selection);
+    var nowLine = findLineDiv(anchorNode, selection);
     $(nowLine).attr("p-line-height", num);
     $("#show-line-height").html(num);
     setFocus();
@@ -754,7 +754,7 @@ function insertCodeStyle() {
     setFocus();
     var selection = window.getSelection ? window.getSelection() : document.getSelection();
     var anchorNode = selection.anchorNode;
-    var nowLine = findLineDiv(anchorNode,selection);
+    var nowLine = findLineDiv(anchorNode, selection);
     var selectiveHtml = getRangeHtml();
     if ($.trim(selectiveHtml) === '') {
         selectiveHtml = "<div>&zwnj;</div>";
@@ -763,7 +763,7 @@ function insertCodeStyle() {
     var codeLineDiv = $("<div class='line-div'>{0}</div>".format(codeStr))[0];
     insertAfter(codeLineDiv, nowLine);
     //如果空行,删除
-    if (nowLine.innerHTML===undefined||nowLine.innerHTML===null||nowLine.innerHTML==="<br>"||$.trim(nowLine.innerHTML.replace(/&nbsp;/g,""))===""){
+    if (nowLine.innerHTML === undefined || nowLine.innerHTML === null || nowLine.innerHTML === "<br>" || $.trim(nowLine.innerHTML.replace(/&nbsp;/g, "")) === "") {
         nowLine.remove();
     }
     $(".prettyprint").removeClass("prettyprinted");
@@ -772,7 +772,7 @@ function insertCodeStyle() {
     selection.collapse(codeLineDiv, 1);
     dealLastLine();
     //添加右键删除功能
-    $("pre").parent(".line-div").smartMenu(codeSettings,{"name":"code"});
+    $("pre").parent(".line-div").smartMenu(codeSettings, {"name": "code"});
 }
 
 /**
@@ -817,7 +817,7 @@ function insertBlockquoteStyle() {
     setFocus();
     var selection = window.getSelection ? window.getSelection() : document.getSelection();
     var anchorNode = selection.anchorNode;
-    var nowLine = findLineDiv(anchorNode,selection);
+    var nowLine = findLineDiv(anchorNode, selection);
     var selectiveHtml = getRangeHtml();
     if ($.trim(selectiveHtml) === '') {
         selectiveHtml = "<div>&zwnj;</div>";
@@ -829,9 +829,9 @@ function insertBlockquoteStyle() {
     insertAfter(newLineDiv, nowLine.nextSibling);
     selection.collapse(codeLineDiv, 1);
     //添加右键删除功能
-    $(".blockquote-body").parent(".line-div").smartMenu(blockSettings,{"name":"block"});
+    $(".blockquote-body").parent(".line-div").smartMenu(blockSettings, {"name": "block"});
     //如果空行,删除
-    if (nowLine.innerHTML===undefined||nowLine.innerHTML===null||nowLine.innerHTML==="<br>"||$.trim(nowLine.innerHTML.replace(/&nbsp;/g,""))===""){
+    if (nowLine.innerHTML === undefined || nowLine.innerHTML === null || nowLine.innerHTML === "<br>" || $.trim(nowLine.innerHTML.replace(/&nbsp;/g, "")) === "") {
         nowLine.remove();
     }
 }
@@ -871,7 +871,7 @@ var blockSettings = [
         text: "删除",
         func: function () {
             var selection = window.getSelection ? window.getSelection() : document.getSelection();
-            var p = findLineDiv(selection.anchorNode,selection);
+            var p = findLineDiv(selection.anchorNode, selection);
             p.remove();
             dealLastLine();
         }
@@ -884,9 +884,9 @@ var blockSettings = [
         text: "下移一行",
         func: function () {
             var selection = window.getSelection ? window.getSelection() : document.getSelection();
-            var p = findLineDiv(selection.anchorNode,selection);
-            var nline=$("<div class='line-div'><br/></div>")[0];
-            insertBefore(nline,p);
+            var p = findLineDiv(selection.anchorNode, selection);
+            var nline = $("<div class='line-div'><br/></div>")[0];
+            insertBefore(nline, p);
         }
     }]
 ];
@@ -894,7 +894,7 @@ var hrSettings = [
     [{
         text: "删除",
         func: function () {
-            var p=$(smartMenuTarget).hasClass("line-hr-div")?smartMenuTarget:$(smartMenuTarget).parents(".line-div")[0];
+            var p = $(smartMenuTarget).hasClass("line-hr-div") ? smartMenuTarget : $(smartMenuTarget).parents(".line-div")[0];
             p.remove();
             dealLastLine();
         }
@@ -906,7 +906,7 @@ var codeSettings = [
         text: "删除",
         func: function () {
             var selection = window.getSelection ? window.getSelection() : document.getSelection();
-            var p = findLineDiv(selection.anchorNode,selection);
+            var p = findLineDiv(selection.anchorNode, selection);
             p.remove();
             dealLastLine();
         }
@@ -919,9 +919,9 @@ var codeSettings = [
         text: "下移一行",
         func: function () {
             var selection = window.getSelection ? window.getSelection() : document.getSelection();
-            var p = findLineDiv(selection.anchorNode,selection);
-            var nline=$("<div class='line-div'><br/></div>")[0];
-            insertBefore(nline,p);
+            var p = findLineDiv(selection.anchorNode, selection);
+            var nline = $("<div class='line-div'><br/></div>")[0];
+            insertBefore(nline, p);
         }
     }, {
         text: "代码高亮",
@@ -935,8 +935,8 @@ var imgSettings = [
     [{
         text: "删除",
         func: function () {
-           // var p = $(".stretch-photo-container.active").parents(".line-div")[0];
-            var p=$(smartMenuTarget).parents(".line-div")[0];
+            // var p = $(".stretch-photo-container.active").parents(".line-div")[0];
+            var p = $(smartMenuTarget).parents(".line-div")[0];
             p.remove();
             dealLastLine();
         }
@@ -944,44 +944,44 @@ var imgSettings = [
         text: "居左",
         func: function () {
             //var p = $(".stretch-photo-container.active").parents(".line-div")[0];
-            var p=$(smartMenuTarget).parents(".line-div")[0];
+            var p = $(smartMenuTarget).parents(".line-div")[0];
             $(p).css("text-align", "left");
         }
     }, {
         text: "居中",
         func: function () {
-           //var p = $(".stretch-photo-container.active").parents(".line-div")[0];
-            var p=$(smartMenuTarget).parents(".line-div")[0];
+            //var p = $(".stretch-photo-container.active").parents(".line-div")[0];
+            var p = $(smartMenuTarget).parents(".line-div")[0];
             $(p).css("text-align", "center");
         }
     }, {
         text: "居右",
         func: function () {
             //var p = $(".stretch-photo-container.active").parents(".line-div")[0];
-            var p=$(smartMenuTarget).parents(".line-div")[0];
+            var p = $(smartMenuTarget).parents(".line-div")[0];
             $(p).css("text-align", "right");
         }
     }, {
         text: "下移一行",
         func: function () {
             //var p = $(".stretch-photo-container.active").parents(".line-div")[0];
-            var p=$(smartMenuTarget).parents(".line-div")[0];
-            var nline=$("<div class='line-div'><br/></div>")[0];
-            insertBefore(nline,p);
+            var p = $(smartMenuTarget).parents(".line-div")[0];
+            var nline = $("<div class='line-div'><br/></div>")[0];
+            insertBefore(nline, p);
         }
     }, {
         text: "宽度填满",
         func: function () {
             //var p = $(".stretch-photo-container.active").parents(".line-div")[0];
-            var p=$(smartMenuTarget).parents(".line-div")[0];
+            var p = $(smartMenuTarget).parents(".line-div")[0];
             $(p).find("img").css("width", "100%");
             $(p).find(".stretch-photo-container").css("width", "100%");
         }
     }, {
         text: "原始尺寸",
         func: function () {
-           //var p = $(".stretch-photo-container.active").parents(".line-div")[0];
-            var p=$(smartMenuTarget).parents(".line-div")[0];
+            //var p = $(".stretch-photo-container.active").parents(".line-div")[0];
+            var p = $(smartMenuTarget).parents(".line-div")[0];
             $(p).find("img").css("width", "auto");
             $(p).find("img").css("height", "auto");
             $(p).find(".stretch-photo-container").css("width", "auto");
@@ -994,16 +994,23 @@ var tableSettings = [
         func: function () {
             var selection = window.getSelection ? window.getSelection() : document.getSelection();
             var anchorNode = selection.anchorNode;
-            var p=findLineDiv(anchorNode,selection);
+            var p = findLineDiv(anchorNode, selection);
             p.remove();
             dealLastLine();
+        }
+    }, {
+        text: "表格下移",
+        func: function () {
+            var p = $(smartMenuTarget).parents(".line-div")[0];
+            var nline = $("<div class='line-div'><br/></div>")[0];
+            insertBefore(nline, p);
         }
     }, {
         text: "删除当前行",
         func: function () {
             var selection = window.getSelection ? window.getSelection() : document.getSelection();
             var anchorNode = selection.anchorNode;
-            delTableRow(anchorNode,selection);
+            delTableRow(anchorNode, selection);
             dealLastLine();
         }
     }, {
@@ -1011,7 +1018,7 @@ var tableSettings = [
         func: function () {
             var selection = window.getSelection ? window.getSelection() : document.getSelection();
             var anchorNode = selection.anchorNode;
-            delTableCol(anchorNode,selection);
+            delTableCol(anchorNode, selection);
             dealLastLine();
         }
     }, {
@@ -1019,70 +1026,97 @@ var tableSettings = [
         func: function () {
             var selection = window.getSelection ? window.getSelection() : document.getSelection();
             var anchorNode = selection.anchorNode;
-            var tr=$(anchorNode).parents("tr")[0];
-            var tdCount=$(tr).find("td").length;
-            var newTr="<tr>";
-            for (var i=0;i<tdCount;i++){
-                newTr+="<td></td>";
+            var tr = $(anchorNode).parents("tr")[0];
+            var tdCount = $(tr).find("td").length;
+            var newTr = "<tr>";
+            for (var i = 0; i < tdCount; i++) {
+                newTr += "<td></td>";
             }
-            newTr+="</tr>";
-            insertBefore($(newTr)[0],tr);
+            newTr += "</tr>";
+            insertBefore($(newTr)[0], tr);
         }
     }, {
         text: "下方添加行",
         func: function () {
             var selection = window.getSelection ? window.getSelection() : document.getSelection();
             var anchorNode = selection.anchorNode;
-            var tr=$(anchorNode).parents("tr")[0];
-            var tdCount=$(tr).find("td").length;
-            var newTr="<tr>";
-            for (var i=0;i<tdCount;i++){
-                newTr+="<td></td>";
+            var tr = $(anchorNode).parents("tr")[0];
+            var tdCount = $(tr).find("td").length;
+            var newTr = "<tr>";
+            for (var i = 0; i < tdCount; i++) {
+                newTr += "<td></td>";
             }
-            newTr+="</tr>";
-            insertAfter($(newTr)[0],tr);
+            newTr += "</tr>";
+            insertAfter($(newTr)[0], tr);
         }
     }, {
         text: "左侧添加列",
         func: function () {
+            savePos();
             var selection = window.getSelection ? window.getSelection() : document.getSelection();
             var anchorNode = selection.anchorNode;
-            var tr=$(anchorNode).parents("tr")[0];
-            var td=$(anchorNode).parents("td")[0];
-            var ptrChilds=$(tr).find("td");
-            var index=0;
-            for(var j=0;j<ptrChilds.length;j++){
-                if (td===ptrChilds[j]){
-                    index=j;
-                }
+            var trs = $($(anchorNode).parents("table")[0]).find("tr");
+            var tr = $(anchorNode).parents("tr")[0];
+            var td = anchorNode.localName === "td" ? anchorNode : $(anchorNode).parents("td")[0];
+            var ptrChilds = $(tr).find("td");
+            var index = [].indexOf.call(ptrChilds, td);
+            for (var i = 0; i < trs.length; i++) {
+                var targetTd = $(trs[i]).find("td")[index];
+                var ele = $("<td style='width: 300px'></td>")[0];
+                insertBefore(ele, targetTd);
             }
-            for(var i=0;i<allTr.length;i++){
-                var tds=$(allTr[i]).find("td");
-                tds[index].remove();
-            }
-
-            var tdCount=$(tr).find("td").length;
-            var newTr="<tr>";
-            for (var i=0;i<tdCount;i++){
-                newTr+="<td></td>";
-            }
-            newTr+="</tr>";
-            insertAfter($(newTr)[0],tr);
+            var tbl = $(anchorNode).parents("table")[0];
+            var lineDiv = findLineDiv(anchorNode, selection);
+            var alterTable = $("<table class='meditor-table'></table>")[0];
+            mvChildNode(alterTable, tbl);
+            $(lineDiv).html("");
+            lineDiv.appendChild(alterTable);
+            $("table").colResizable({
+                //fit flex overflow
+                resizeMode: 'fit',
+                liveDrag: true,
+                draggingClass: "dragging"
+            });
+            restorePos();
+            $("table").smartMenu(tableSettings, {"name": "table"});
         }
     }, {
         text: "右侧添加列",
         func: function () {
-           //var p = $(".stretch-photo-container.active").parents(".line-div")[0];
-            var p=$(smartMenuTarget).parents(".line-div")[0];
-            $(p).find("img").css("width", "auto");
-            $(p).find("img").css("height", "auto");
-            $(p).find(".stretch-photo-container").css("width", "auto");
+            savePos();
+            var selection = window.getSelection ? window.getSelection() : document.getSelection();
+            var anchorNode = selection.anchorNode;
+            var trs = $($(anchorNode).parents("table")[0]).find("tr");
+            var tr = $(anchorNode).parents("tr")[0];
+            var td = anchorNode.localName === "td" ? anchorNode : $(anchorNode).parents("td")[0];
+            var ptrChilds = $(tr).find("td");
+            var index = [].indexOf.call(ptrChilds, td);
+            for (var i = 0; i < trs.length; i++) {
+                var targetTd = $(trs[i]).find("td")[index];
+                var ele = $("<td style='width: 300px'></td>")[0];
+                insertAfter(ele, targetTd);
+            }
+            var tbl = $(anchorNode).parents("table")[0];
+            var lineDiv = findLineDiv(anchorNode, selection);
+            var alterTable = $("<table class='meditor-table'></table>")[0];
+            mvChildNode(alterTable, tbl);
+            $(lineDiv).html("");
+            lineDiv.appendChild(alterTable);
+            $("table").colResizable({
+                //fit flex overflow
+                resizeMode: 'fit',
+                liveDrag: true,
+                draggingClass: "dragging"
+            });
+            restorePos();
+            $("table").smartMenu(tableSettings, {"name": "table"});
         }
     }]
 ];
+
 function dealLastLine() {
     //最后空留一行
-    if (rootNode.childNodes.length===0||rootNode.childNodes[rootNode.childNodes.length - 1].outerHTML != '<div class="line-div"><br></div>') {
+    if (rootNode.childNodes.length === 0 || rootNode.childNodes[rootNode.childNodes.length - 1].outerHTML != '<div class="line-div"><br></div>') {
         var lastLineNode = $("<div class='line-div'><br/></div>")[0];
         $(rootNode).append(lastLineNode);
     }
@@ -1096,36 +1130,38 @@ function insertLink() {
     $("#meditor_link_blank").removeAttr("checked");
     $("#linkModal").modal("show");
     setTimeout(function () {
-        var addrInput=$("#meditor_link_addr")[0];
+        var addrInput = $("#meditor_link_addr")[0];
         addrInput.select();
-    },200);
+    }, 200);
 }
+
 function doInsertLink() {
     setFocus();
     restorePos();
-    var name=$("#meditor_link_name").val();
-    var addr=$("#meditor_link_addr").val();
-    if ($.trim(addr)===''){
+    var name = $("#meditor_link_name").val();
+    var addr = $("#meditor_link_addr").val();
+    if ($.trim(addr) === '') {
         $("#linkModal").modal("hide");
         return;
     }
-    if ($.trim(name)===''){
-        name=addr;
+    if ($.trim(name) === '') {
+        name = addr;
     }
-    var isBlank=$("#meditor_link_blank").is(':checked');
-    var openStyle=isBlank?"_blank":"_self";
-    var linkHtml="<a href='{0}' title='{1}' target='{2}' class='meditor-a-link'>{3}</a>".format(addr,addr,openStyle,name);
-    document.execCommand("insertHtml",false,linkHtml);
+    var isBlank = $("#meditor_link_blank").is(':checked');
+    var openStyle = isBlank ? "_blank" : "_self";
+    var linkHtml = "<a href='{0}' title='{1}' target='{2}' class='meditor-a-link'>{3}</a>".format(addr, addr, openStyle, name);
+    document.execCommand("insertHtml", false, linkHtml);
     $("#linkModal").modal("hide");
 }
-$(function(){
+
+$(function () {
     $("table").colResizable({
         //fit flex overflow
         resizeMode: 'fit',
-        liveDrag:true,
-        draggingClass:"dragging"
+        liveDrag: true,
+        draggingClass: "dragging"
     });
-    $("table").smartMenu(tableSettings,{"name":"table"});
+    $("table").smartMenu(tableSettings, {"name": "table"});
 });
 
 /**
@@ -1133,37 +1169,99 @@ $(function(){
  * @param anchorNode
  * @param selection
  */
-function delTableRow(anchorNode,selection) {
-    var t=$(anchorNode).parents("table")[0];
-    var trLen=$(t).find("tr").length;
-    if (trLen>1){
-        var tr=$(anchorNode).parents("tr")[0];
+function delTableRow(anchorNode, selection) {
+    var t = $(anchorNode).parents("table")[0];
+    var trLen = $(t).find("tr").length;
+    if (trLen > 1) {
+        var tr = $(anchorNode).parents("tr")[0];
         tr.remove();
-    }else{
-        var lineDiv=findLineDiv(anchorNode,selection);
+    } else {
+        var lineDiv = findLineDiv(anchorNode, selection);
         lineDiv.remove();
     }
 }
 
-function delTableCol(anchorNode,selection) {
-    var t=$(anchorNode).parents("table")[0];
-    var allTr= $(t).find("tr");
-    var ptr=$(anchorNode).parents("tr")[0];
-    var ptrChilds=$(ptr).find("td");
-    if (ptrChilds.length>1){
-        var ptd=$(anchorNode).parents("td")[0];
-        var index=0;
-        for(var j=0;j<ptrChilds.length;j++){
-            if (ptd===ptrChilds[j]){
-                index=j;
+function delTableCol(anchorNode, selection) {
+    var t = $(anchorNode).parents("table")[0];
+    var allTr = $(t).find("tr");
+    var ptr = $(anchorNode).parents("tr")[0];
+    var ptrChilds = $(ptr).find("td");
+    if (ptrChilds.length > 1) {
+        var ptd = $(anchorNode).parents("td")[0];
+        var index = 0;
+        for (var j = 0; j < ptrChilds.length; j++) {
+            if (ptd === ptrChilds[j]) {
+                index = j;
             }
         }
-        for(var i=0;i<allTr.length;i++){
-            var tds=$(allTr[i]).find("td");
+        for (var i = 0; i < allTr.length; i++) {
+            var tds = $(allTr[i]).find("td");
             tds[index].remove();
         }
-    }else{
-        var lineDiv=findLineDiv(anchorNode,selection);
+    } else {
+        var lineDiv = findLineDiv(anchorNode, selection);
         lineDiv.remove();
     }
 }
+
+//表格选择器
+$(".select-table .select-table-cell").hover(function (e) {
+    var tableCells=$(this).parent().find(".select-table-cell");
+    var index = [].indexOf.call(tableCells, this);
+    var row=parseInt(index/6);
+    var col=index%6;
+    for (var i=0;i<=row;i++){
+        for(var j=0;j<=col;j++){
+            var noopIndex=6*i+j;
+           $(tableCells[noopIndex]).addClass("active");
+        }
+    }
+}, function (e) {
+    $(".select-table .select-table-cell").removeClass("active");
+});
+$(".select-table .select-table-cell").click(function () {
+    setFocus();
+    restorePos();
+    var selection = window.getSelection ? window.getSelection() : document.getSelection();
+    var anchorNode = selection.anchorNode;
+    var nowLine = findLineDiv(anchorNode, selection);
+    var tableStr =createTable(this);
+    var codeLineDiv = $("<div class='line-div'>{0}</div>".format(tableStr))[0];
+    insertAfter(codeLineDiv, nowLine);
+    selection.collapse(codeLineDiv, 1);
+    //添加列宽调整组件
+    $("table").colResizable({
+        //fit flex overflow
+        resizeMode: 'fit',
+        liveDrag: true,
+        draggingClass: "dragging"
+    });
+    //添加右键删除功能
+    $("table").smartMenu(tableSettings, {"name": "table"});
+    //如果空行,删除
+    if (nowLine.innerHTML === undefined || nowLine.innerHTML === null || nowLine.innerHTML === "<br>" || $.trim(nowLine.innerHTML.replace(/&nbsp;/g, "")) === "") {
+        nowLine.remove();
+    }
+    dealLastLine();
+});
+function createTable(pos) {
+    var table="<table class='meditor-table'>";
+    var tableCells=$(pos).parent().find(".select-table-cell");
+    var index = [].indexOf.call(tableCells, pos);
+    var row=parseInt(index/6);
+    var col=index%6;
+    for (var i=0;i<=row;i++){
+        table+="<tr>";
+        for(var j=0;j<=col;j++){
+            table+="<td></td>";
+        }
+        table+="</tr>";
+    }
+    table+="</table>";
+    return table;
+}
+
+$(".btn.btn-default.dropdown-toggle").click(function () {
+        savePos();
+    }
+);

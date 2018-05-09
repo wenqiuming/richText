@@ -122,9 +122,14 @@ var smartMenuTarget=null;
                 var st = D.scrollTop();
                 var jqueryMenu = funSmartMenu();
                 if (jqueryMenu) {
+                    var winWidth=$("body").outerWidth();
+                    var realLeft=e.clientX + params.offsetX;
+                    if (e.clientX + params.offsetX+142>winWidth){
+                        realLeft=winWidth-142;
+                    }
                     jqueryMenu.css({
                         display: "block",
-                        left: e.clientX + params.offsetX,
+                        left: realLeft,
                         top: e.clientY + st + params.offsetY
                     });
                     D.data("target", jqueryMenu);

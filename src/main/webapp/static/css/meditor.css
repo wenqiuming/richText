@@ -37,6 +37,7 @@
     min-height: calc(100vh - 50px);
     max-height: calc(100vh - 50px);
     overflow-y: auto;
+    overflow-x: hidden;
     outline: none !important;
     resize:vertical;
 }
@@ -481,7 +482,10 @@ pre.prettyprint{
     color: #ffffff;
 }
 .meditor-table{
-    width: 100%;
+    max-width: 100%;
+    min-width: 100%;
+    overflow: hidden;
+    margin: 5px 0;
     border-top: 2px solid #cc6666;
     border-left: 2px solid #cc6666;
 }
@@ -489,4 +493,27 @@ pre.prettyprint{
     border-bottom: 2px solid #cc6666;
     border-right: 2px solid #cc6666;
     padding: 4px;
+    word-break: break-all;
+    word-wrap: break-word;
+}
+
+/*select table*/
+.select-table{
+    padding: 5px;
+    line-height: 0;
+    width: 144px ;
+    min-width: 144px;
+}
+
+.select-table-cell{
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 1px solid #cccccc;
+    cursor: pointer;
+    padding: 1px;
+    margin: 1px;
+}
+.select-table-cell.active{
+    background-color: #FCDC74;
 }
