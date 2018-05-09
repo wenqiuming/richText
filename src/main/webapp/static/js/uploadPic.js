@@ -55,7 +55,7 @@ document.addEventListener('paste', function (event) {
                             var selection = window.getSelection ? window.getSelection() : document.getSelection();
                             var anchorNode = selection.anchorNode;
                             var nowLine = findLineDiv(anchorNode, selection);
-                            var imgLine = $("<div class='line-div'></div>")[0];
+                            var imgLine = $("<div class='line-div' contenteditable='false'></div>")[0];
                             $(imgLine).append(outerHtml);
                             insertAfter(imgLine, nowLine);
                             //如果空行,删除
