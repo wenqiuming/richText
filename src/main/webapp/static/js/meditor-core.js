@@ -1162,6 +1162,14 @@ $(function () {
         draggingClass: "dragging"
     });
     $("table").smartMenu(tableSettings, {"name": "table"});
+
+    $('[tooltip="true"]').tooltip({trigger: "hover ", placement: "bottom"});
+
+    $(".dropdown-toggle").click(function () {
+        setTimeout(function () {
+            $('[tooltip="true"]').tooltip("hide");
+        }, 300);
+    });
 });
 
 /**

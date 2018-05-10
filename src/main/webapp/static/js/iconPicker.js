@@ -40,8 +40,8 @@
 	        function createUI($element){
 	        	$popup=$('<div/>',{
 	        		css: {
-		        		'top':$element.offset().top+$element.outerHeight()+6,
-		        		'left':$element.offset().left
+		        		'top':$element.offset().top+$element.outerHeight(),
+		        		'left':$element.offset().left-3
 		        	},
 		        	class:'icon-popup'
 	        	});
