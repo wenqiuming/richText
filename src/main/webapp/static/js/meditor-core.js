@@ -108,15 +108,20 @@ $(window).keyup(function (e) {
  * mouse click function
  */
 $(window).click(function (e) {
-    var node = document.getElementsByClassName("icon-popup");
+    var iconPop = document.getElementsByClassName("icon-popup");
+    var emojinPop = document.getElementsByClassName("emoji-popup");
     var iconNode = document.getElementById("txt_boostrap_icon");
+    var emojiNode = document.getElementById("emoji_icon");
+    var clickOnIcon=e.target === iconNode || iconNode.contains(e.target);
+    var clickOnEmoji=e.target === emojiNode || emojiNode.contains(e.target);
     //表情框出现隐藏控制
-    if (e.target === iconNode || iconNode.contains(e.target)) {
-    } else {
-        if (node.length > 0 && e.target !== node[0] && !node[0].contains(e.target)) {
-            node[0].remove();
-        }
+    if (!clickOnIcon||iconPop.length>0){
+        $(".icon-popup").remove();
     }
+    if (!clickOnEmoji||emojinPop.length>0){
+        $(".emoji-popup").remove();
+    }
+
     //判断是否行内元素
     var selection = window.getSelection ? window.getSelection() : document.getSelection();
     var anchorNode = selection.anchorNode;
@@ -841,15 +846,25 @@ function insertBlockquoteStyle() {
 var settings = {
     clickIconEvent: clickIcon
 };
+var emojiSettings = {
+    clickIconEvent: clickEmoji
+};
 //表情选择器初始化
 $(function () {
     $("#txt_boostrap_icon").iconPicker(settings);
+    $("#emoji_icon").emojiPicker(emojiSettings);
 });
 
-//表情
+//图标
 function clickIcon(val) {
     setFocus();
     var emoji = "<img src='' class='" + val + "'/>";
+    document.execCommand("insertHtml", false, emoji);
+}
+//表情
+function clickEmoji(val) {
+    setFocus();
+    var emoji = "<img class='emoji-cell' src='{0}'/>".format(val);
     document.execCommand("insertHtml", false, emoji);
 }
 
