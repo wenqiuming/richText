@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>checkbox</title>
+    <style>
+        .todo {
+            position: relative;
+            padding-left: 25px;
+        }
+
+        .todo:before {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 20px;
+            height: 20px;
+            content: "";
+            cursor: pointer;
+            background: url("../../static/img/check.png") no-repeat;
+            background-size: cover;
+        }
+
+        .todo.checked:before {
+            background-image: url("../../static/img/checked.png");
+        }
+
+        .todo.checked {
+            text-decoration: line-through;
+            color: #999999;
+        }
+    </style>
+</head>
+<body contenteditable="true">
+<div class="todo">abstdadadada</div>
+</body>
+<script src="../../static/js/jquery-2.0.3.js"></script>
+<script>
+    $(".todo").click(function (e) {
+        if (e.offsetX <= 20) {
+            if ($(this).hasClass("checked")) {
+                $(this).removeClass("checked");
+            } else {
+                $(this).addClass("checked");
+            }
+        }
+    });
+</script>
+</html>

@@ -112,13 +112,13 @@ $(window).click(function (e) {
     var emojinPop = document.getElementsByClassName("emoji-popup");
     var iconNode = document.getElementById("txt_boostrap_icon");
     var emojiNode = document.getElementById("emoji_icon");
-    var clickOnIcon=e.target === iconNode || iconNode.contains(e.target);
-    var clickOnEmoji=e.target === emojiNode || emojiNode.contains(e.target);
+    var clickOnIcon = e.target === iconNode || iconNode.contains(e.target);
+    var clickOnEmoji = e.target === emojiNode || emojiNode.contains(e.target);
     //表情框出现隐藏控制
-    if (!clickOnIcon||iconPop.length>0){
+    if (!clickOnIcon || iconPop.length > 0) {
         $(".icon-popup").remove();
     }
-    if (!clickOnEmoji||emojinPop.length>0){
+    if (!clickOnEmoji || emojinPop.length > 0) {
         $(".emoji-popup").remove();
     }
 
@@ -853,6 +853,7 @@ var emojiSettings = {
 $(function () {
     $("#txt_boostrap_icon").iconPicker(settings);
     $("#emoji_icon").emojiPicker(emojiSettings);
+    bindTodoEvt();
 });
 
 //图标
@@ -861,6 +862,7 @@ function clickIcon(val) {
     var emoji = "<img src='' class='" + val + "'/>";
     document.execCommand("insertHtml", false, emoji);
 }
+
 //表情
 function clickEmoji(val) {
     setFocus();
@@ -1229,14 +1231,14 @@ function delTableCol(anchorNode, selection) {
 
 //表格选择器
 $(".select-table .select-table-cell").hover(function (e) {
-    var tableCells=$(this).parent().find(".select-table-cell");
+    var tableCells = $(this).parent().find(".select-table-cell");
     var index = [].indexOf.call(tableCells, this);
-    var row=parseInt(index/6);
-    var col=index%6;
-    for (var i=0;i<=row;i++){
-        for(var j=0;j<=col;j++){
-            var noopIndex=6*i+j;
-           $(tableCells[noopIndex]).addClass("active");
+    var row = parseInt(index / 6);
+    var col = index % 6;
+    for (var i = 0; i <= row; i++) {
+        for (var j = 0; j <= col; j++) {
+            var noopIndex = 6 * i + j;
+            $(tableCells[noopIndex]).addClass("active");
         }
     }
 }, function (e) {
@@ -1248,7 +1250,7 @@ $(".select-table .select-table-cell").click(function () {
     var selection = window.getSelection ? window.getSelection() : document.getSelection();
     var anchorNode = selection.anchorNode;
     var nowLine = findLineDiv(anchorNode, selection);
-    var tableStr =createTable(this);
+    var tableStr = createTable(this);
     var codeLineDiv = $("<div class='line-div'>{0}</div>".format(tableStr))[0];
     insertAfter(codeLineDiv, nowLine);
     selection.collapse(codeLineDiv, 1);
@@ -1267,20 +1269,21 @@ $(".select-table .select-table-cell").click(function () {
     }
     dealLastLine();
 });
+
 function createTable(pos) {
-    var table="<table class='meditor-table'>";
-    var tableCells=$(pos).parent().find(".select-table-cell");
+    var table = "<table class='meditor-table'>";
+    var tableCells = $(pos).parent().find(".select-table-cell");
     var index = [].indexOf.call(tableCells, pos);
-    var row=parseInt(index/6);
-    var col=index%6;
-    for (var i=0;i<=row;i++){
-        table+="<tr>";
-        for(var j=0;j<=col;j++){
-            table+="<td></td>";
+    var row = parseInt(index / 6);
+    var col = index % 6;
+    for (var i = 0; i <= row; i++) {
+        table += "<tr>";
+        for (var j = 0; j <= col; j++) {
+            table += "<td></td>";
         }
-        table+="</tr>";
+        table += "</tr>";
     }
-    table+="</table>";
+    table += "</table>";
     return table;
 }
 
@@ -1288,3 +1291,31 @@ $(".btn.btn-default.dropdown-toggle").click(function () {
         savePos();
     }
 );
+
+function bindTodoEvt() {
+    $(".todo").unbind("click");
+    $(".todo").bind("click", function (e) {
+        if (e.offsetX <= 20) {
+            if ($(e.target).hasClass("checked")) {
+                $(e.target).removeClass("checked");
+            } else {
+                $(e.target).addClass("checked");
+            }
+        }
+    })
+}
+
+function insertToDo() {
+    setFocus();
+    var selection = window.getSelection ? window.getSelection() : document.getSelection();
+    var anchorNode = selection.anchorNode;
+    var nowLine = findLineDiv(anchorNode, selection);
+    var todoList=$(anchorNode).parents(".todo");
+    if (todoList.length>0){
+        $(todoList[0]).removeClass("todo");
+    }else{
+        $(nowLine).addClass("todo");
+        bindTodoEvt();
+        dealLastLine();
+    }
+}

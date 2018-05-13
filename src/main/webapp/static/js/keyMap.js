@@ -1,9 +1,21 @@
 $(window).keyup(function (e) {
-
+    // //enter
+    if (e.keyCode===13){
+        var enterSelection = window.getSelection ? window.getSelection() : document.getSelection();
+        var enterAnchorNode = enterSelection.anchorNode;
+        if (enterAnchorNode===null||enterAnchorNode===undefined){
+            return;
+        }
+        var thisLine=findLineDiv(enterAnchorNode,enterSelection);
+        if (thisLine===null){
+            return;
+        }
+        bindTodoEvt();
+    }
 });
 
 $(window).keydown(function (e) {
-    console.log(e);
+    //console.log(e);
     //Tab按键
     if (e.keyCode === 9) {
         e.preventDefault();
@@ -26,7 +38,6 @@ $(window).keydown(function (e) {
         e.preventDefault();
         saveDoc();
     }
-
 });
 
 function findRootBelow(node) {

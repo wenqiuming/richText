@@ -101,7 +101,7 @@
                 }
                 ;
                 $(".icon-list", $popup).html($ul);
-                $.each($(".icon-list>ul li"), function (i) {
+                $.each($(".emoji-popup .icon-list>ul li"), function (i) {
                     if (i >= emojiStartIndex && i < emojiStartIndex + per_page) {
                         $(this).show();
                     } else {

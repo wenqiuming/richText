@@ -497,9 +497,10 @@ font color
 }
 
 .blockquote-body {
-    padding: 0 15px;
+    padding: 3px 15px;
     color: #666;
-    border-left: 4px solid #ddd;
+    background-color: #efefef;
+    border-left: 4px solid #ccc;
 }
 
 img.glyphicon {
@@ -654,7 +655,7 @@ pre.prettyprint {
 
 .meditor-a-link {
     border-bottom: 1px solid #009a61;
-    text-decoration: none;
+    text-decoration: none !important;
     color: #009a61;
     font-weight: 600;
 }
@@ -750,4 +751,32 @@ pre.prettyprint {
 
 .select-table-cell.active {
     background-color: #FCDC74;
+}
+
+/*to do*/
+.todo {
+    position: relative;
+    padding-left: 25px;
+    margin: 5px 20px 0;
+}
+
+.todo:before {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 20px;
+    height: 20px;
+    content: "";
+    cursor: pointer;
+    background: url("../../static/img/check.png") no-repeat;
+    background-size: cover;
+}
+
+.todo.checked:before {
+    background-image: url("../../static/img/checked.png");
+}
+
+.todo.checked {
+    text-decoration: line-through;
+    color: #999999;
 }

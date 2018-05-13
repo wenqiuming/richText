@@ -98,7 +98,7 @@
                     $ul.append("<li><a href=\"#\" title=" + changeTitle + "><span class=\"" + arrLis[i] + "\"></span></a></li>");
                 }
                 $(".icon-list", $popup).html($ul);
-                $.each($(".icon-list>ul li"), function (i) {
+                $.each($(".icon-popup .icon-list>ul li"), function (i) {
                     if (i >= iconStartIndex && i < iconStartIndex + per_page) {
                         $(this).show();
                     } else {
