@@ -830,8 +830,6 @@ function insertBlockquoteStyle() {
     var codeStr = "<div class='blockquote-body' contenteditable='true'>" + selectiveHtml + "</div>";
     var codeLineDiv = $("<div class='line-div'>{0}</div>".format(codeStr))[0];
     insertAfter(codeLineDiv, nowLine);
-    var newLineDiv = $("<div class='line-div'><br></div>")[0];
-    insertAfter(newLineDiv, nowLine.nextSibling);
     selection.collapse(codeLineDiv, 1);
     //添加右键删除功能
     $(".blockquote-body").parent(".line-div").smartMenu(blockSettings, {"name": "block"});
@@ -839,6 +837,7 @@ function insertBlockquoteStyle() {
     if (nowLine.innerHTML === undefined || nowLine.innerHTML === null || nowLine.innerHTML === "<br>" || $.trim(nowLine.innerHTML.replace(/&nbsp;/g, "")) === "") {
         nowLine.remove();
     }
+    dealLastLine();
 }
 
 
@@ -1311,8 +1310,12 @@ function insertToDo() {
     var anchorNode = selection.anchorNode;
     var nowLine = findLineDiv(anchorNode, selection);
     var todoList=$(anchorNode).parents(".todo");
-    if (todoList.length>0){
-        $(todoList[0]).removeClass("todo");
+    if (todoList.length>0||$(anchorNode).hasClass("todo")){
+        if ($(anchorNode).hasClass("todo")){
+            $(anchorNode).removeClass("todo");
+        }else{
+            $(todoList[0]).removeClass("todo");
+        }
     }else{
         $(nowLine).addClass("todo");
         bindTodoEvt();
