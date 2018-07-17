@@ -39,3 +39,4 @@ gen
 .gitignore
 .idea/inspectionProfiles/
 src/main/resources/
+*.~
